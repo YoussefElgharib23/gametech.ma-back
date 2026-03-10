@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Category extends Model
+class Subcategory extends Model
 {
     use HasFactory;
 
@@ -14,9 +15,9 @@ class Category extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'category_id',
         'name',
         'slug',
-        'image',
         'status',
         'position',
     ];
@@ -25,6 +26,7 @@ class Category extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'category_id' => 'integer',
         'position' => 'integer',
         'status' => 'string',
     ];
@@ -39,9 +41,9 @@ class Category extends Model
         return $query->where('status', 'inactive');
     }
 
-    public function subcategories()
+    public function category(): BelongsTo
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->belongsTo(Category::class);
     }
 
     /**
@@ -51,9 +53,9 @@ class Category extends Model
     {
         parent::boot();
 
-        static::creating(function (Category $category): void {
-            if (empty($category->slug)) {
-                $category->slug = Str::slug($category->name);
+        static::creating(function (Subcategory $subcategory): void {
+            if (empty($subcategory->slug)) {
+                $subcategory->slug = Str::slug($subcategory->name);
             }
         });
     }

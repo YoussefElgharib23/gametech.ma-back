@@ -22,6 +22,7 @@ class CategoryController extends Controller
             'name' => $c->name,
             'slug' => $c->slug,
             'image' => $c->image,
+            'status' => $c->status,
             'position' => $c->position,
         ]);
 
@@ -37,6 +38,7 @@ class CategoryController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'],
             'image' => ['nullable', 'string', 'max:500'],
+            'status' => ['nullable', 'in:active,inactive'],
             'position' => ['nullable', 'integer', 'min:0'],
         ]);
 
@@ -44,6 +46,7 @@ class CategoryController extends Controller
             'name' => $validated['name'],
             'slug' => $validated['slug'] ?? \Illuminate\Support\Str::slug($validated['name']),
             'image' => $validated['image'] ?? null,
+            'status' => $validated['status'] ?? 'active',
             'position' => $validated['position'] ?? 0,
         ]);
 
@@ -52,6 +55,7 @@ class CategoryController extends Controller
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'status' => $category->status,
             'position' => $category->position,
         ], 201);
     }
@@ -66,6 +70,7 @@ class CategoryController extends Controller
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'status' => $category->status,
             'position' => $category->position,
         ]);
     }
@@ -79,6 +84,7 @@ class CategoryController extends Controller
             'name' => ['sometimes', 'string', 'max:255'],
             'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:categories,slug,' . $category->id],
             'image' => ['sometimes', 'nullable', 'string', 'max:500'],
+            'status' => ['sometimes', 'nullable', 'in:active,inactive'],
             'position' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ]);
 
@@ -90,6 +96,7 @@ class CategoryController extends Controller
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'status' => $category->status,
             'position' => $category->position,
         ]);
     }
