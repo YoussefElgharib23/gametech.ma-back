@@ -13,15 +13,14 @@ class BrandController extends Controller
      */
     public function index(): JsonResponse
     {
-        $brands = Brand::orderBy('position')->orderBy('id')->get();
+        $brands = Brand::orderBy('name')->orderBy('id')->get();
 
         $data = $brands->map(fn (Brand $b) => [
             'id' => $b->id,
             'name' => $b->name,
             'slug' => $b->slug,
-            'image' => $b->image,
+            'image' => $b->image_url,
             'status' => $b->status,
-            'position' => $b->position,
         ]);
 
         return response()->json($data);
@@ -37,24 +36,23 @@ class BrandController extends Controller
             'slug' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'string', 'max:500'],
             'status' => ['nullable', 'in:active,inactive'],
-            'position' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        $imagePath = isset($validated['image']) ? $this->normalizeImageToStoragePath($validated['image']) : null;
 
         $brand = Brand::create([
             'name' => $validated['name'],
             'slug' => $validated['slug'] ?? \Illuminate\Support\Str::slug($validated['name']),
-            'image' => $validated['image'] ?? null,
+            'image' => $imagePath,
             'status' => $validated['status'] ?? 'active',
-            'position' => $validated['position'] ?? 0,
         ]);
 
         return response()->json([
             'id' => $brand->id,
             'name' => $brand->name,
             'slug' => $brand->slug,
-            'image' => $brand->image,
+            'image' => $brand->image_url,
             'status' => $brand->status,
-            'position' => $brand->position,
         ], 201);
     }
 
@@ -67,9 +65,8 @@ class BrandController extends Controller
             'id' => $brand->id,
             'name' => $brand->name,
             'slug' => $brand->slug,
-            'image' => $brand->image,
+            'image' => $brand->image_url,
             'status' => $brand->status,
-            'position' => $brand->position,
         ]);
     }
 
@@ -83,9 +80,11 @@ class BrandController extends Controller
             'slug' => ['sometimes', 'nullable', 'string', 'max:255'],
             'image' => ['sometimes', 'nullable', 'string', 'max:500'],
             'status' => ['sometimes', 'nullable', 'in:active,inactive'],
-            'position' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ]);
 
+        if (array_key_exists('image', $validated)) {
+            $validated['image'] = $validated['image'] ? $this->normalizeImageToStoragePath($validated['image']) : null;
+        }
         $brand->fill($validated);
         $brand->save();
 
@@ -93,10 +92,21 @@ class BrandController extends Controller
             'id' => $brand->id,
             'name' => $brand->name,
             'slug' => $brand->slug,
-            'image' => $brand->image,
+            'image' => $brand->image_url,
             'status' => $brand->status,
-            'position' => $brand->position,
         ]);
+    }
+
+    /**
+     * Store only the storage public path (e.g. "brands/amd.png"). If a full URL is sent, extract the path.
+     */
+    private function normalizeImageToStoragePath(string $value): string
+    {
+        if (preg_match('#/storage/(.+)$#', $value, $m)) {
+            return $m[1];
+        }
+
+        return $value;
     }
 
     /**

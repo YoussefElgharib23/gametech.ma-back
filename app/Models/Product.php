@@ -123,17 +123,25 @@ class Product extends Model
     }
 
     // Accessors
+    private static function formatPriceAsMad(float $amount): string
+    {
+        $formatter = new \NumberFormatter('fr_FR', \NumberFormatter::CURRENCY);
+
+        return $formatter->formatCurrency($amount, 'MAD');
+    }
+
     public function getPriceLabelAttribute(): string
     {
-        return number_format($this->price, 0, ',', ' ') . ' MAD';
+        return self::formatPriceAsMad((float) $this->price);
     }
 
     public function getCompareAtPriceLabelAttribute(): ?string
     {
-        if (!$this->compare_at_price) {
+        if ($this->compare_at_price === null) {
             return null;
         }
-        return number_format($this->compare_at_price, 0, ',', ' ') . ' MAD';
+
+        return self::formatPriceAsMad((float) $this->compare_at_price);
     }
 
     public function getStockStatusLabelAttribute(): string

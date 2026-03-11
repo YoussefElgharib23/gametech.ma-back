@@ -23,8 +23,7 @@ class ProductController extends Controller
 
         $paginator = Product::with(['category', 'subcategory', 'brand', 'uploads'])
             ->filter($filter)
-            ->orderBy('position')
-            ->orderBy('id')
+            ->latest('id')
             ->paginate($perPage)
             ->through(fn (Product $p) => [
                 'id' => $p->id,
@@ -39,7 +38,7 @@ class ProductController extends Controller
                 'subcategory_name' => $p->subcategory?->name,
                 'brand_id' => $p->brand_id,
                 'brand_name' => $p->brand?->name,
-                'brand_image' => $p->brand?->image,
+                'brand_image' => $p->brand?->image_url,
                 'price' => $p->price,
                 'price_label' => $p->price_label,
                 'compare_at_price' => $p->compare_at_price,
@@ -68,9 +67,9 @@ class ProductController extends Controller
             'slug' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'short_description' => ['nullable', 'string'],
-            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
             'subcategory_id' => ['nullable', 'integer', 'exists:subcategories,id'],
-            'brand_id' => ['nullable', 'integer', 'exists:brands,id'],
+            'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'compare_at_price' => ['nullable', 'numeric', 'min:0'],
             'stock_status' => ['nullable', 'in:in_stock,out_of_stock,preorder'],
@@ -89,9 +88,9 @@ class ProductController extends Controller
             'slug' => $validated['slug'] ?? \Illuminate\Support\Str::slug($validated['title']),
             'description' => $validated['description'] ?? null,
             'short_description' => $validated['short_description'] ?? null,
-            'category_id' => $validated['category_id'] ?? null,
+            'category_id' => $validated['category_id'],
             'subcategory_id' => $validated['subcategory_id'] ?? null,
-            'brand_id' => $validated['brand_id'] ?? null,
+            'brand_id' => $validated['brand_id'],
             'price' => $validated['price'],
             'compare_at_price' => $validated['compare_at_price'] ?? null,
             'stock_status' => $validated['stock_status'] ?? 'in_stock',
@@ -128,7 +127,7 @@ class ProductController extends Controller
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
             'brand_name' => $product->brand?->name,
-            'brand_image' => $product->brand?->image,
+            'brand_image' => $product->brand?->image_url,
             'price' => $product->price,
             'price_label' => $product->price_label,
             'compare_at_price' => $product->compare_at_price,
@@ -164,7 +163,7 @@ class ProductController extends Controller
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
             'brand_name' => $product->brand?->name,
-            'brand_image' => $product->brand?->image,
+            'brand_image' => $product->brand?->image_url,
             'price' => $product->price,
             'price_label' => $product->price_label,
             'compare_at_price' => $product->compare_at_price,
@@ -191,9 +190,9 @@ class ProductController extends Controller
             'slug' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
             'short_description' => ['sometimes', 'nullable', 'string'],
-            'category_id' => ['sometimes', 'nullable', 'integer', 'exists:categories,id'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
             'subcategory_id' => ['sometimes', 'nullable', 'integer', 'exists:subcategories,id'],
-            'brand_id' => ['sometimes', 'nullable', 'integer', 'exists:brands,id'],
+            'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'price' => ['sometimes', 'numeric', 'min:0'],
             'compare_at_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'stock_status' => ['sometimes', 'nullable', 'in:in_stock,out_of_stock,preorder'],
@@ -245,7 +244,7 @@ class ProductController extends Controller
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
             'brand_name' => $product->brand?->name,
-            'brand_image' => $product->brand?->image,
+            'brand_image' => $product->brand?->image_url,
             'price' => $product->price,
             'price_label' => $product->price_label,
             'compare_at_price' => $product->compare_at_price,

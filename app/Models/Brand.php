@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class Brand extends Model
 {
@@ -19,14 +20,24 @@ class Brand extends Model
         'slug',
         'image',
         'status',
-        'position',
     ];
+
+    /**
+     * Full URL for the brand logo (storage path is stored in image).
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+
+        return URL::asset('storage/' . ltrim($this->image, '/'));
+    }
 
     /**
      * @var array<string, string>
      */
     protected $casts = [
-        'position' => 'integer',
         'status' => 'string',
     ];
 

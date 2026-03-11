@@ -1,0 +1,290 @@
+[
+    {
+        "id": "1",
+        "name": "Alienware",
+        "slug": "alienware",
+        "path": "brands\/alienware.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "2",
+        "name": "Amd",
+        "slug": "amd",
+        "path": "brands\/amd.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "3",
+        "name": "Antec",
+        "slug": "antec",
+        "path": "brands\/antec.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "4",
+        "name": "Aoc",
+        "slug": "aoc",
+        "path": "brands\/aoc.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "5",
+        "name": "Aorus",
+        "slug": "aorus",
+        "path": "brands\/aorus.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "6",
+        "name": "Apple",
+        "slug": "apple",
+        "path": "brands\/apple.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "7",
+        "name": "Asrock",
+        "slug": "asrock",
+        "path": "brands\/asrock.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "8",
+        "name": "Asus",
+        "slug": "asus",
+        "path": "brands\/asus.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "9",
+        "name": "Cooler Master",
+        "slug": "cooler-master",
+        "path": "brands\/cooler_master.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "10",
+        "name": "Corsair",
+        "slug": "corsair",
+        "path": "brands\/corsair.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "11",
+        "name": "Crucial",
+        "slug": "crucial",
+        "path": "brands\/crucial.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "12",
+        "name": "Dell",
+        "slug": "dell",
+        "path": "brands\/dell.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "13",
+        "name": "Gamdias",
+        "slug": "gamdias",
+        "path": "brands\/gamdias.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "14",
+        "name": "Gigabyte",
+        "slug": "gigabyte",
+        "path": "brands\/gigabyte.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "15",
+        "name": "Goodram",
+        "slug": "goodram",
+        "path": "brands\/goodram.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "16",
+        "name": "Hp",
+        "slug": "hp",
+        "path": "brands\/hp.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "17",
+        "name": "Hyperx",
+        "slug": "hyperx",
+        "path": "brands\/hyperx.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "18",
+        "name": "Insta360",
+        "slug": "insta360",
+        "path": "brands\/insta360.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "19",
+        "name": "Intel",
+        "slug": "intel",
+        "path": "brands\/intel.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "20",
+        "name": "Kingston",
+        "slug": "kingston",
+        "path": "brands\/kingston.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "21",
+        "name": "Lenovo",
+        "slug": "lenovo",
+        "path": "brands\/lenovo.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "22",
+        "name": "Lexar",
+        "slug": "lexar",
+        "path": "brands\/lexar.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "23",
+        "name": "Lian Li",
+        "slug": "lian-li",
+        "path": "brands\/lian_li.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "24",
+        "name": "Logitech",
+        "slug": "logitech",
+        "path": "brands\/logitech.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "25",
+        "name": "Msi",
+        "slug": "msi",
+        "path": "brands\/msi.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "26",
+        "name": "Nzxt",
+        "slug": "nzxt",
+        "path": "brands\/nzxt.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "27",
+        "name": "Patriot",
+        "slug": "patriot",
+        "path": "brands\/patriot.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "28",
+        "name": "Pny",
+        "slug": "pny",
+        "path": "brands\/pny.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "29",
+        "name": "Razer",
+        "slug": "razer",
+        "path": "brands\/razer.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "30",
+        "name": "Samsung",
+        "slug": "samsung",
+        "path": "brands\/samsung.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "31",
+        "name": "Sony",
+        "slug": "sony",
+        "path": "brands\/sony.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "32",
+        "name": "Toshiba",
+        "slug": "toshiba",
+        "path": "brands\/toshiba.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "33",
+        "name": "Transcend",
+        "slug": "transcend",
+        "path": "brands\/transcend.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "34",
+        "name": "Western Digital",
+        "slug": "western-digital",
+        "path": "brands\/western_digital.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "35",
+        "name": "Zotac",
+        "slug": "zotac",
+        "path": "brands\/zotac.png",
+        "created_at": "2025-10-05 14:51:20",
+        "updated_at": "2025-10-05 14:51:20"
+    },
+    {
+        "id": "36",
+        "name": "Xiaomi",
+        "slug": "xiaomi",
+        "path": "brands\/xiaomi.png",
+        "created_at": "2026-02-13 21:43:46",
+        "updated_at": "2026-02-13 21:43:46"
+    }
+]

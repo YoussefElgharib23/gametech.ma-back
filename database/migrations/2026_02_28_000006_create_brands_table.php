@@ -13,7 +13,6 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('status')->default('active');
-            $table->unsignedInteger('position')->default(0);
             $table->timestamps();
         });
     }

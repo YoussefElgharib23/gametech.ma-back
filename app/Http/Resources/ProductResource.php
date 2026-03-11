@@ -31,7 +31,7 @@ class ProductResource extends JsonResource
             'images' => $this->whenLoaded('uploads', fn () => $this->uploads->map(fn ($u) => $u->url)->values()->toArray(), []),
             'brand' => $this->when($this->relationLoaded('brand') && $this->brand, fn () => [
                 'name' => $this->brand->name,
-                'image' => $this->brand->image,
+                'image' => $this->brand->image_url,
             ]),
             'currentPrice' => $this->price_label,
             'oldPrice' => $this->compare_at_price_label,
