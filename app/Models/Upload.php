@@ -20,6 +20,16 @@ class Upload extends Model
         'mime_type',
         'extension',
         'path',
+        'uploadable_type',
+        'uploadable_id',
+        'position',
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'position' => 'integer',
     ];
 
     /**

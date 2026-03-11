@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-class Category extends Model
+class Brand extends Model
 {
     use HasFactory;
 
@@ -39,12 +40,7 @@ class Category extends Model
         return $query->where('status', 'inactive');
     }
 
-    public function subcategories()
-    {
-        return $this->hasMany(Subcategory::class);
-    }
-
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
@@ -56,9 +52,12 @@ class Category extends Model
     {
         parent::boot();
 
-        static::creating(function (Category $category): void {
-            if (empty($category->slug)) {
-                $category->slug = Str::slug($category->name);
+        static::creating(function (Brand $brand): void {
+            if (empty($brand->slug)) {
+                $brand->slug = Str::slug($brand->name);
+            }
+            if (empty($brand->status)) {
+                $brand->status = 'active';
             }
         });
     }

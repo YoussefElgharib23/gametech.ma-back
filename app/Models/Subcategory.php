@@ -46,6 +46,11 @@ class Subcategory extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     /**
      * Boot the model and generate slug from name when creating.
      */
