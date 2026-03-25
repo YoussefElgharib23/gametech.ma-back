@@ -14,6 +14,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingSectionController;
 use App\Http\Controllers\ProductController as PublicProductController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\StoreSettingController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\VisitorController;
@@ -33,6 +34,9 @@ Route::get('/home', [HomeController::class, 'index']);
 
 // Header product search
 Route::get('/search/products', [HomeController::class, 'searchProducts']);
+
+// Public store settings (for header/footer)
+Route::get('/store-settings/public', [StoreSettingController::class, 'public']);
 
 // Configurator: products by configurator_category
 Route::get('/configurator/products', [HomeController::class, 'configuratorProducts']);

@@ -37,6 +37,7 @@ class ProductController extends Controller
 
     private const CATALOG_SECTION_SLUGS = [
         'nouvel-arrivage',
+        'vente-flash',
         'meilleures-ventes',
         'promotion',
     ];

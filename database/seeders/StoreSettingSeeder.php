@@ -16,6 +16,8 @@ class StoreSettingSeeder extends Seeder
             'company.phone_1' => '+212',
             'company.phone_2' => null,
             'company.address' => null,
+            'flash_sales.enabled' => true,
+            'flash_sales.expires_at' => null,
             'socials.facebook' => null,
             'socials.instagram' => null,
             'socials.tiktok' => null,
