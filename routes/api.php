@@ -8,6 +8,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Dashboard\CustomerController as DashboardCustomerController;
 use App\Http\Controllers\Dashboard\OverviewController as DashboardOverviewController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\StoreSettingController as DashboardStoreSettingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingSectionController;
 use App\Http\Controllers\ProductController as PublicProductController;
@@ -68,6 +69,10 @@ Route::group(['prefix' => 'dashboard'], function () {
     Route::apiResource('products', ProductController::class);
     Route::get('customers', [DashboardCustomerController::class, 'index']);
     Route::get('customers/{id}/orders', [DashboardCustomerController::class, 'orders']);
+
+    // Store settings (key/value)
+    Route::get('store-settings', [DashboardStoreSettingController::class, 'index']);
+    Route::put('store-settings', [DashboardStoreSettingController::class, 'upsert']);
 });
 
 // Admin routes for order management

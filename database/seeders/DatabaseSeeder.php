@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SliderSeeder::class,
             LandingSectionSeeder::class,
+            StoreSettingSeeder::class,
         ]);
     }
 }
