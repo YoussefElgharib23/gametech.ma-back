@@ -12,8 +12,7 @@ class VisitorController extends Controller
 {
     public function __construct(
         protected VisitorService $visitorService
-    ) {
-    }
+    ) {}
 
     /**
      * Create/retrieve a visitor from fingerprint, issue Sanctum token, and ensure cart exists.
@@ -29,7 +28,7 @@ class VisitorController extends Controller
         ]);
 
         /** @var Visitor|null $authedVisitor */
-        $authedVisitor = $request->user();
+        $authedVisitor = auth('visitor')->user();
 
         if ($authedVisitor instanceof Visitor) {
             $visitor = $authedVisitor;

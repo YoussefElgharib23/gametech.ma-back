@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Enums\ProductLandingSection;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\ProductFilter;
 use App\Models\Product;
 use App\Models\Upload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -49,6 +51,7 @@ class ProductController extends Controller
                 'status' => $p->status,
                 'is_featured' => $p->is_featured,
                 'position' => $p->position,
+                'section' => $p->section?->value,
                 'published_at' => $p->published_at?->toIso8601String(),
                 'images' => $p->uploads->map(fn ($u) => $u->url)->toArray(),
             ]);
@@ -77,6 +80,7 @@ class ProductController extends Controller
             'status' => ['nullable', 'in:active,inactive,draft'],
             'is_featured' => ['nullable', 'boolean'],
             'position' => ['nullable', 'integer', 'min:0'],
+            'section' => ['nullable', Rule::enum(ProductLandingSection::class)],
             'published_at' => ['nullable', 'date'],
             'upload_ids' => ['nullable', 'array'],
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
@@ -98,11 +102,12 @@ class ProductController extends Controller
             'status' => $validated['status'] ?? 'draft',
             'is_featured' => $validated['is_featured'] ?? false,
             'position' => $validated['position'] ?? 0,
+            'section' => $validated['section'] ?? null,
             'published_at' => $validated['published_at'] ?? null,
         ]);
 
         // Attach images
-        if (!empty($validated['upload_ids'])) {
+        if (! empty($validated['upload_ids'])) {
             foreach ($validated['upload_ids'] as $index => $uploadId) {
                 Upload::where('id', $uploadId)->update([
                     'uploadable_type' => Product::class,
@@ -138,6 +143,7 @@ class ProductController extends Controller
             'status' => $product->status,
             'is_featured' => $product->is_featured,
             'position' => $product->position,
+            'section' => $product->section?->value,
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ], 201);
@@ -174,6 +180,7 @@ class ProductController extends Controller
             'status' => $product->status,
             'is_featured' => $product->is_featured,
             'position' => $product->position,
+            'section' => $product->section?->value,
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ]);
@@ -186,7 +193,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:255'],
-            'sku' => ['sometimes', 'string', 'max:255', 'unique:products,sku,' . $product->id],
+            'sku' => ['sometimes', 'string', 'max:255', 'unique:products,sku,'.$product->id],
             'slug' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
             'short_description' => ['sometimes', 'nullable', 'string'],
@@ -200,6 +207,7 @@ class ProductController extends Controller
             'status' => ['sometimes', 'nullable', 'in:active,inactive,draft'],
             'is_featured' => ['sometimes', 'nullable', 'boolean'],
             'position' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'section' => ['sometimes', 'nullable', Rule::enum(ProductLandingSection::class)],
             'published_at' => ['sometimes', 'nullable', 'date'],
             'upload_ids' => ['sometimes', 'nullable', 'array'],
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
@@ -255,6 +263,7 @@ class ProductController extends Controller
             'status' => $product->status,
             'is_featured' => $product->is_featured,
             'position' => $product->position,
+            'section' => $product->section?->value,
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ]);

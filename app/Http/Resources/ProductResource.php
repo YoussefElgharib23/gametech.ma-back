@@ -18,7 +18,7 @@ class ProductResource extends JsonResource
         $savingsLabel = null;
         if ($this->compare_at_price && (float) $this->compare_at_price > (float) $this->price) {
             $savings = (float) $this->compare_at_price - (float) $this->price;
-            $savingsLabel = 'Économisez ' . number_format($savings, 0, ',', ' ') . ' MAD';
+            $savingsLabel = 'Économisez '.number_format($savings, 0, ',', ' ').' MAD';
         }
 
         return [
@@ -37,6 +37,7 @@ class ProductResource extends JsonResource
             'oldPrice' => $this->compare_at_price_label,
             'savingsLabel' => $savingsLabel,
             'stockStatus' => $this->stock_status_label,
+            'section' => $this->section?->value,
             'category' => $this->when($this->relationLoaded('category') && $this->category, fn () => [
                 'name' => $this->category->name,
                 'slug' => $this->category->slug ?? Str::slug($this->category->name),

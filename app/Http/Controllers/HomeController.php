@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Enums\ProductLandingSection;
 use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Slider;
 use App\Models\Subcategory;
-use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -63,21 +64,135 @@ class HomeController extends Controller
                 'image' => $b->image_url,
             ]);
 
+        $categories = Category::active()
+            ->orderByRaw('position IS NULL')
+            ->orderBy('position')
+            ->orderBy('name')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (Category $c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+                'image' => $c->image_url,
+            ]);
+
+        $landingProducts = collect(ProductLandingSection::cases())
+            ->mapWithKeys(fn (ProductLandingSection $section) => [
+                $section->value => $this->landingProductsForSection($section),
+            ])
+            ->all();
+
+        $productsPerCategory = $this->productsPerCategoryForLanding();
+
         return response()->json([
             'sliders' => [
                 'main' => $main,
                 'three_card' => $threeCard,
                 'banner' => $banner,
             ],
+            'categories' => $categories,
             'brands' => $brands,
+            'landing_products' => $landingProducts,
+            'products_per_category' => $productsPerCategory,
         ]);
+    }
+
+    /**
+     * Active products shown in the homepage “Nos sélections / Nouvel arrivage / Best seller” blocks.
+     *
+     * @return list<array{id: int, slug: string, title: string, image: string|null, stockStatus: string, currentPrice: string, oldPrice: string|null}>
+     */
+    private function landingProductsForSection(ProductLandingSection $section): array
+    {
+        return Product::query()
+            ->where('status', 'active')
+            ->where('section', $section->value)
+            ->with(['uploads'])
+            ->orderByRaw('position IS NULL')
+            ->orderBy('position')
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->limit(24)
+            ->get()
+            ->map(fn (Product $product) => $this->mapProductForLandingCarousel($product))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array{id: int, slug: string, title: string, image: string|null, stockStatus: string, currentPrice: string, oldPrice: string|null}
+     */
+    private function mapProductForLandingCarousel(Product $product): array
+    {
+        $firstImage = $product->uploads->first();
+        $isPromo = $product->compare_at_price !== null
+            && (float) $product->compare_at_price > (float) $product->price;
+
+        return [
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'title' => $product->title,
+            'image' => $firstImage?->url,
+            'stockStatus' => $product->stock_status_label,
+            'currentPrice' => $product->price_label,
+            'oldPrice' => $isPromo ? $product->compare_at_price_label : null,
+        ];
+    }
+
+    /**
+     * Top 5 active categories ranked by number of active products (highest first), each with up to 20 products for the homepage block.
+     *
+     * @return list<array{slug: string, name: string, products: list<array{id: int, slug: string, title: string, image: string|null, stockStatus: string, currentPrice: string, oldPrice: string|null}>}>
+     */
+    private function productsPerCategoryForLanding(): array
+    {
+        $categories = Category::active()
+            ->whereHas('products', fn ($q) => $q->where('status', 'active'))
+            ->withCount([
+                'products as active_products_count' => fn ($q) => $q->where('status', 'active'),
+            ])
+            ->orderByDesc('active_products_count')
+            ->orderBy('name')
+            ->orderBy('id')
+            ->limit(5)
+            ->get();
+
+        $blocks = [];
+
+        foreach ($categories as $category) {
+            $products = Product::query()
+                ->where('status', 'active')
+                ->where('category_id', $category->id)
+                ->with(['uploads'])
+                ->orderByRaw('position IS NULL')
+                ->orderBy('position')
+                ->orderByDesc('published_at')
+                ->orderByDesc('id')
+                ->limit(20)
+                ->get()
+                ->map(fn (Product $product) => $this->mapProductForLandingCarousel($product))
+                ->values()
+                ->all();
+
+            if ($products === []) {
+                continue;
+            }
+
+            $blocks[] = [
+                'slug' => $category->slug,
+                'name' => $category->name,
+                'products' => $products,
+            ];
+        }
+
+        return $blocks;
     }
 
     /**
      * Archive page: list products for a given entity type & slug.
      *
      * @param  string  $entityType  category|subcategory|brand (or plural forms)
-     * @param  string  $entitySlug
      */
     public function archive(Request $request, string $entityType, string $entitySlug): JsonResponse
     {
@@ -304,7 +419,7 @@ class HomeController extends Controller
             ->with(['brand', 'uploads']);
 
         if ($q !== '') {
-            $term = '%' . $q . '%';
+            $term = '%'.$q.'%';
             $builder->where(function ($sub) use ($term) {
                 $sub->where('title', 'like', $term)
                     ->orWhere('sku', 'like', $term);
@@ -341,5 +456,3 @@ class HomeController extends Controller
         ]);
     }
 }
-
-

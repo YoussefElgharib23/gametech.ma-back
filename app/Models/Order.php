@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class Order extends Model
 {
-    use HasFactory, FormattedPrices;
+    use FormattedPrices, HasFactory;
 
     /**
      * @var list<string>
@@ -25,6 +25,7 @@ class Order extends Model
         'sub_total',
         'total',
         'shipping_price',
+        'stock_deducted_at',
     ];
 
     /**
@@ -57,6 +58,7 @@ class Order extends Model
     {
         return [
             'created_at' => 'date:Y-m-d H:i',
+            'stock_deducted_at' => 'datetime',
         ];
     }
 

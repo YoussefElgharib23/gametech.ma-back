@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Dashboard\CustomerController as DashboardCustomerController;
+use App\Http\Controllers\Dashboard\OverviewController as DashboardOverviewController;
+use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingSectionController;
 use App\Http\Controllers\ProductController as PublicProductController;
@@ -12,9 +16,6 @@ use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Dashboard\ProductController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 Route::post('/uploads/preview', [UploadController::class, 'storePreview']);
 
@@ -28,7 +29,7 @@ Route::get('/home', [HomeController::class, 'index']);
 Route::get('/search/products', [HomeController::class, 'searchProducts']);
 Route::post('/visit', [VisitorController::class, 'visit']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:visitor')->group(function () {
     Route::get('/cart', [CartController::class, 'show']);
     Route::post('/cart/items', [CartController::class, 'addItem']);
     Route::patch('/cart/items/{itemId}/increment', [CartController::class, 'incrementItem']);
@@ -59,17 +60,21 @@ Route::get('/landing-sections', [LandingSectionController::class, 'index']);
 Route::get('/landing-sections/{key}', [LandingSectionController::class, 'show']);
 Route::put('/landing-sections/{key}', [LandingSectionController::class, 'update']);
 
-
 Route::group(['prefix' => 'dashboard'], function () {
+    Route::get('overview', DashboardOverviewController::class);
     Route::apiResource('products', ProductController::class);
+    Route::get('customers', [DashboardCustomerController::class, 'index']);
+    Route::get('customers/{id}/orders', [DashboardCustomerController::class, 'orders']);
 });
 
 // Admin routes for order management
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/orders', [AdminOrderController::class, 'index']);
     Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
+    Route::get('/orders/{id}/confirm-preview', [AdminOrderController::class, 'confirmPreview']);
     Route::get('/orders/{id}', [AdminOrderController::class, 'show']);
     Route::patch('/orders/{id}/status', [AdminOrderController::class, 'updateStatus']);
+    Route::delete('/orders/{id}', [AdminOrderController::class, 'destroy']);
     Route::patch('/orders/{id}/details', [AdminOrderController::class, 'updateDetails']);
     Route::patch('/orders/{orderId}/items/{itemId}', [AdminOrderController::class, 'updateItemQuantity']);
     Route::post('/orders/{orderId}/items', [AdminOrderController::class, 'addItem']);

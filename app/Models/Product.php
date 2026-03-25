@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\Filterable;
+use App\Enums\ProductLandingSection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,6 +33,7 @@ class Product extends Model
         'status',
         'is_featured',
         'position',
+        'section',
         'published_at',
     ];
 
@@ -47,6 +49,7 @@ class Product extends Model
         'stock_quantity' => 'integer',
         'is_featured' => 'boolean',
         'position' => 'integer',
+        'section' => ProductLandingSection::class,
         'published_at' => 'datetime',
     ];
 
@@ -166,13 +169,14 @@ class Product extends Model
         }
         $suffix = 2;
         while ($query->exists()) {
-            $slug = $baseSlug . '-' . $suffix;
+            $slug = $baseSlug.'-'.$suffix;
             $query = static::query()->where('slug', $slug);
             if ($excludeId !== null) {
                 $query->where('id', '!=', $excludeId);
             }
             $suffix++;
         }
+
         return $slug;
     }
 
@@ -197,7 +201,7 @@ class Product extends Model
         static::updating(function (Product $product): void {
             if ($product->isDirty('title') && empty($product->slug)) {
                 $product->slug = static::makeUniqueSlug(Str::slug($product->title), $product->id);
-            } elseif ($product->isDirty('slug') && !empty($product->slug)) {
+            } elseif ($product->isDirty('slug') && ! empty($product->slug)) {
                 $product->slug = static::makeUniqueSlug($product->slug, $product->id);
             }
         });

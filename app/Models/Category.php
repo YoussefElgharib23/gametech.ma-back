@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -28,6 +29,18 @@ class Category extends Model
         'position' => 'integer',
         'status' => 'string',
     ];
+
+    /**
+     * Full URL for the category image (storage path is stored in image).
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+
+        return URL::asset('storage/'.ltrim($this->image, '/'));
+    }
 
     public function scopeActive($query)
     {

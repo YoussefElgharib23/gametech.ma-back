@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -64,12 +66,91 @@ class OrderController extends Controller
             'status' => 'required|in:new,confirmed,delivered,returned,cancelled',
         ]);
 
-        $order = Order::findOrFail($id);
-        $order->update(['status' => $data['status']]);
+        $order = DB::transaction(function () use ($id, $data): Order {
+            /** @var Order $order */
+            $order = Order::query()
+                ->with('items')
+                ->lockForUpdate()
+                ->findOrFail($id);
+
+            $nextStatus = (string) $data['status'];
+            $shouldDeductStock = $order->status !== 'confirmed'
+                && $nextStatus === 'confirmed'
+                && $order->stock_deducted_at === null;
+
+            if ($shouldDeductStock) {
+                $this->deductInventoryForOrder($order);
+                $order->stock_deducted_at = now();
+            }
+
+            $order->status = $nextStatus;
+            $order->save();
+
+            return $order;
+        });
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
             'order' => $this->transformOrder($order->fresh(['customer', 'items.model.uploads'])),
+        ]);
+    }
+
+    public function confirmPreview($id)
+    {
+        $order = Order::query()
+            ->with('items.model')
+            ->findOrFail($id);
+
+        $items = $order->items
+            ->where('model_type', Product::class)
+            ->values()
+            ->map(function (OrderItem $item): array {
+                /** @var Product|null $product */
+                $product = $item->model instanceof Product ? $item->model : null;
+                $stock = $product?->stock_quantity;
+                $ordered = (int) $item->quantity;
+                $remaining = $stock === null ? null : ((int) $stock - $ordered);
+
+                return [
+                    'order_item_id' => $item->id,
+                    'product_id' => $product?->id,
+                    'product_name' => $product?->title ?? 'Produit',
+                    'ordered_quantity' => $ordered,
+                    'stock_quantity' => $stock === null ? null : (int) $stock,
+                    'remaining_stock' => $remaining,
+                    'has_enough_stock' => $stock === null ? true : $remaining >= 0,
+                ];
+            })
+            ->values();
+
+        $canConfirm = $items->every(fn (array $it) => (bool) $it['has_enough_stock']);
+
+        return response()->json([
+            'can_confirm' => $canConfirm,
+            'already_deducted' => $order->stock_deducted_at !== null,
+            'items' => $items,
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        DB::transaction(function () use ($id): void {
+            /** @var Order $order */
+            $order = Order::query()
+                ->with('items')
+                ->lockForUpdate()
+                ->findOrFail($id);
+
+            if ($order->stock_deducted_at !== null) {
+                $this->restoreInventoryForOrder($order);
+            }
+
+            $order->items()->delete();
+            $order->delete();
+        });
+
+        return response()->json([
+            'message' => 'Commande supprimée avec succès',
         ]);
     }
 
@@ -239,5 +320,94 @@ class OrderController extends Controller
         });
 
         return $order;
+    }
+
+    protected function deductInventoryForOrder(Order $order): void
+    {
+        $items = $order->items
+            ->where('model_type', Product::class)
+            ->values();
+
+        if ($items->isEmpty()) {
+            return;
+        }
+
+        $productIds = $items->pluck('model_id')->unique()->values();
+
+        $products = Product::query()
+            ->whereIn('id', $productIds)
+            ->lockForUpdate()
+            ->get()
+            ->keyBy('id');
+
+        foreach ($items as $item) {
+            /** @var Product|null $product */
+            $product = $products->get($item->model_id);
+
+            if (! $product) {
+                continue;
+            }
+
+            // Null stock means not tracked.
+            if ($product->stock_quantity === null) {
+                continue;
+            }
+
+            $newQuantity = (int) $product->stock_quantity - (int) $item->quantity;
+
+            if ($newQuantity < 0) {
+                throw ValidationException::withMessages([
+                    'status' => sprintf(
+                        "Stock insuffisant pour '%s'. Quantité disponible: %d, demandée: %d.",
+                        (string) $product->title,
+                        (int) $product->stock_quantity,
+                        (int) $item->quantity
+                    ),
+                ]);
+            }
+
+            $product->stock_quantity = $newQuantity;
+            $product->stock_status = $newQuantity <= 0 ? 'out_of_stock' : 'in_stock';
+            $product->save();
+        }
+    }
+
+    protected function restoreInventoryForOrder(Order $order): void
+    {
+        $items = $order->items
+            ->where('model_type', Product::class)
+            ->values();
+
+        if ($items->isEmpty()) {
+            return;
+        }
+
+        $productIds = $items->pluck('model_id')->unique()->values();
+
+        $products = Product::query()
+            ->whereIn('id', $productIds)
+            ->lockForUpdate()
+            ->get()
+            ->keyBy('id');
+
+        foreach ($items as $item) {
+            /** @var Product|null $product */
+            $product = $products->get($item->model_id);
+
+            if (! $product) {
+                continue;
+            }
+
+            // Null stock means not tracked.
+            if ($product->stock_quantity === null) {
+                continue;
+            }
+
+            $newQuantity = (int) $product->stock_quantity + (int) $item->quantity;
+
+            $product->stock_quantity = $newQuantity;
+            $product->stock_status = $newQuantity <= 0 ? 'out_of_stock' : 'in_stock';
+            $product->save();
+        }
     }
 }

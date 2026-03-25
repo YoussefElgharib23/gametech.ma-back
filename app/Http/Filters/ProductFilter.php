@@ -2,6 +2,7 @@
 
 namespace App\Http\Filters;
 
+use App\Enums\ProductLandingSection;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter extends Filter
@@ -15,7 +16,7 @@ class ProductFilter extends Filter
             return $this->builder;
         }
 
-        $term = '%' . trim($value) . '%';
+        $term = '%'.trim($value).'%';
 
         return $this->builder->where(function (Builder $q) use ($term) {
             $q->where('title', 'like', $term)
@@ -79,6 +80,27 @@ class ProductFilter extends Filter
         }
 
         return $this->builder->where('subcategory_id', $id);
+    }
+
+    /**
+     * Filter by homepage landing section (selections, new-arrival, best-seller). Use "none" for products without a section.
+     */
+    public function section(?string $value): Builder
+    {
+        if ($value === null || $value === '' || $value === 'all') {
+            return $this->builder;
+        }
+
+        if ($value === 'none') {
+            return $this->builder->whereNull('section');
+        }
+
+        $allowed = array_map(fn (ProductLandingSection $c) => $c->value, ProductLandingSection::cases());
+        if (! in_array($value, $allowed, true)) {
+            return $this->builder;
+        }
+
+        return $this->builder->where('section', $value);
     }
 
     /**
