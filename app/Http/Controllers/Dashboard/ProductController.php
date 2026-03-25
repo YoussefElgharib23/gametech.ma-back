@@ -6,6 +6,7 @@ use App\Enums\ProductLandingSection;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\ProductFilter;
 use App\Models\Product;
+use App\Models\Section;
 use App\Models\Upload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,33 @@ use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
+    private const CONFIGURATOR_CATEGORIES = [
+        'PROCESSEUR',
+        'CPU COOLER',
+        'CARTE MÈRE',
+        'Mémoires RAM',
+        'CARTE GRAPHIQUE',
+        'SSD',
+        'HDD',
+        'BOITIER GAMER',
+        'ALIMENTATION PC (PSU)',
+        'SOURIS',
+        'CLAVIER',
+        'CASQUE',
+        'Microphone',
+        'COMBO',
+        'ECRAN PC',
+        'ENCEINTES PC',
+        'WEBCAMS',
+        'TAPIS SOURIS',
+    ];
+
+    private const CATALOG_SECTION_SLUGS = [
+        'nouvel-arrivage',
+        'meilleures-ventes',
+        'promotion',
+    ];
+
     /**
      * List products (paginated). Filters via query string (search, status, category_id, brand_id).
      * Query: page, per_page (default 15).
@@ -23,7 +51,7 @@ class ProductController extends Controller
     {
         $perPage = max(1, min(100, (int) $request->input('per_page', 15)));
 
-        $paginator = Product::with(['category', 'subcategory', 'brand', 'uploads'])
+        $paginator = Product::with(['category', 'subcategory', 'brand', 'uploads', 'sections'])
             ->filter($filter)
             ->latest('id')
             ->paginate($perPage)
@@ -52,6 +80,8 @@ class ProductController extends Controller
                 'is_featured' => $p->is_featured,
                 'position' => $p->position,
                 'section' => $p->section?->value,
+                'configurator_category' => $p->configurator_category,
+                'catalog_sections' => $p->sections->pluck('slug')->values()->all(),
                 'published_at' => $p->published_at?->toIso8601String(),
                 'images' => $p->uploads->map(fn ($u) => $u->url)->toArray(),
             ]);
@@ -81,6 +111,9 @@ class ProductController extends Controller
             'is_featured' => ['nullable', 'boolean'],
             'position' => ['nullable', 'integer', 'min:0'],
             'section' => ['nullable', Rule::enum(ProductLandingSection::class)],
+            'configurator_category' => ['nullable', 'string', Rule::in(self::CONFIGURATOR_CATEGORIES)],
+            'catalog_sections' => ['nullable', 'array'],
+            'catalog_sections.*' => ['string', Rule::in(self::CATALOG_SECTION_SLUGS)],
             'published_at' => ['nullable', 'date'],
             'upload_ids' => ['nullable', 'array'],
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
@@ -103,8 +136,19 @@ class ProductController extends Controller
             'is_featured' => $validated['is_featured'] ?? false,
             'position' => $validated['position'] ?? 0,
             'section' => $validated['section'] ?? null,
+            'configurator_category' => $validated['configurator_category'] ?? null,
             'published_at' => $validated['published_at'] ?? null,
         ]);
+
+        if (isset($validated['catalog_sections']) && is_array($validated['catalog_sections'])) {
+            $sectionIds = Section::query()
+                ->where('is_active', true)
+                ->whereIn('slug', $validated['catalog_sections'])
+                ->pluck('id')
+                ->values()
+                ->all();
+            $product->sections()->sync($sectionIds);
+        }
 
         // Attach images
         if (! empty($validated['upload_ids'])) {
@@ -117,7 +161,7 @@ class ProductController extends Controller
             }
         }
 
-        $product->load(['category', 'subcategory', 'brand', 'uploads']);
+        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -144,6 +188,8 @@ class ProductController extends Controller
             'is_featured' => $product->is_featured,
             'position' => $product->position,
             'section' => $product->section?->value,
+            'configurator_category' => $product->configurator_category,
+            'catalog_sections' => $product->sections->pluck('slug')->values()->all(),
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ], 201);
@@ -154,7 +200,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
-        $product->load(['category', 'subcategory', 'brand', 'uploads']);
+        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -181,6 +227,8 @@ class ProductController extends Controller
             'is_featured' => $product->is_featured,
             'position' => $product->position,
             'section' => $product->section?->value,
+            'configurator_category' => $product->configurator_category,
+            'catalog_sections' => $product->sections->pluck('slug')->values()->all(),
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ]);
@@ -208,6 +256,9 @@ class ProductController extends Controller
             'is_featured' => ['sometimes', 'nullable', 'boolean'],
             'position' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'section' => ['sometimes', 'nullable', Rule::enum(ProductLandingSection::class)],
+            'configurator_category' => ['sometimes', 'nullable', 'string', Rule::in(self::CONFIGURATOR_CATEGORIES)],
+            'catalog_sections' => ['sometimes', 'nullable', 'array'],
+            'catalog_sections.*' => ['string', Rule::in(self::CATALOG_SECTION_SLUGS)],
             'published_at' => ['sometimes', 'nullable', 'date'],
             'upload_ids' => ['sometimes', 'nullable', 'array'],
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
@@ -215,6 +266,17 @@ class ProductController extends Controller
 
         $product->fill($validated);
         $product->save();
+
+        if (array_key_exists('catalog_sections', $validated)) {
+            $slugs = $validated['catalog_sections'] ?? [];
+            $sectionIds = Section::query()
+                ->where('is_active', true)
+                ->whereIn('slug', $slugs)
+                ->pluck('id')
+                ->values()
+                ->all();
+            $product->sections()->sync($sectionIds);
+        }
 
         // Update images if provided
         if (isset($validated['upload_ids']) && count($validated['upload_ids']) > 0) {
@@ -237,7 +299,7 @@ class ProductController extends Controller
             }
         }
 
-        $product->load(['category', 'subcategory', 'brand', 'uploads']);
+        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -264,6 +326,8 @@ class ProductController extends Controller
             'is_featured' => $product->is_featured,
             'position' => $product->position,
             'section' => $product->section?->value,
+            'configurator_category' => $product->configurator_category,
+            'catalog_sections' => $product->sections->pluck('slug')->values()->all(),
             'published_at' => $product->published_at?->toIso8601String(),
             'images' => $product->uploads->map(fn ($u) => $u->url)->toArray(),
         ]);

@@ -7,6 +7,7 @@ use App\Enums\ProductLandingSection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
@@ -34,6 +35,7 @@ class Product extends Model
         'is_featured',
         'position',
         'section',
+        'configurator_category',
         'published_at',
     ];
 
@@ -72,6 +74,11 @@ class Product extends Model
     public function uploads(): MorphMany
     {
         return $this->morphMany(Upload::class, 'uploadable')->orderBy('position');
+    }
+
+    public function sections(): BelongsToMany
+    {
+        return $this->belongsToMany(Section::class, 'product_section');
     }
 
     // Scopes

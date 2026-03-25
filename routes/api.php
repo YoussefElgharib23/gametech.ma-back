@@ -27,6 +27,9 @@ Route::get('/home', [HomeController::class, 'index']);
 
 // Header product search
 Route::get('/search/products', [HomeController::class, 'searchProducts']);
+
+// Configurator: products by configurator_category
+Route::get('/configurator/products', [HomeController::class, 'configuratorProducts']);
 Route::post('/visit', [VisitorController::class, 'visit']);
 
 Route::middleware('auth:visitor')->group(function () {

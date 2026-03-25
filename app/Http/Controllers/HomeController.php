@@ -6,10 +6,12 @@ use App\Enums\ProductLandingSection;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Section;
 use App\Models\Slider;
 use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
 {
@@ -221,6 +223,15 @@ class HomeController extends Controller
             $query->where('brand_id', $brand->id);
             $entityLabel = $brand->name;
             $normalizedType = 'brand';
+        } elseif (in_array($type, ['section', 'sections'], true)) {
+            if (! Schema::hasTable('sections')) {
+                abort(404);
+            }
+
+            $section = Section::query()->where('is_active', true)->where('slug', $slug)->firstOrFail();
+            $query->whereHas('sections', fn ($q) => $q->where('sections.id', $section->id));
+            $entityLabel = $section->label;
+            $normalizedType = 'section';
         } else {
             abort(404);
         }
@@ -398,6 +409,74 @@ class HomeController extends Controller
         ])->values();
 
         return response()->json(['categories' => $items]);
+    }
+
+    /**
+     * Products filtered by configurator_category, with optional search. Paginated.
+     */
+    public function configuratorProducts(Request $request): JsonResponse
+    {
+        $category = $request->query('category');
+        $search = trim((string) $request->query('q', ''));
+        $perPage = min(50, max(1, (int) $request->query('per_page', 20)));
+        $page = max(1, (int) $request->query('page', 1));
+
+        $query = Product::query()
+            ->where('status', 'active')
+            ->with(['uploads', 'brand']);
+
+        if ($category !== null && $category !== '') {
+            $query->where('configurator_category', $category);
+        }
+
+        if ($search !== '') {
+            $term = '%'.$search.'%';
+            $query->where(function ($q) use ($term) {
+                $q->where('title', 'like', $term)
+                    ->orWhere('sku', 'like', $term);
+            });
+        }
+
+        $total = (clone $query)->count();
+        $lastPage = max(1, (int) ceil($total / $perPage));
+
+        $products = $query
+            ->orderByRaw('position IS NULL')
+            ->orderBy('position')
+            ->orderByDesc('id')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get()
+            ->map(function (Product $product) {
+                $firstImage = $product->uploads->first();
+                $isPromo = $product->compare_at_price !== null
+                    && (float) $product->compare_at_price > (float) $product->price;
+
+                return [
+                    'id' => $product->id,
+                    'slug' => $product->slug,
+                    'title' => $product->title,
+                    'image' => $firstImage?->url,
+                    'brand_name' => $product->brand?->name,
+                    'brand_image' => $product->brand?->image_url,
+                    'stockStatus' => $product->stock_status_label,
+                    'currentPrice' => $product->price_label,
+                    'price' => (float) $product->price,
+                    'oldPrice' => $isPromo ? $product->compare_at_price_label : null,
+                    'configurator_category' => $product->configurator_category,
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'data' => $products,
+            'meta' => [
+                'current_page' => $page,
+                'last_page' => $lastPage,
+                'per_page' => $perPage,
+                'total' => $total,
+            ],
+        ]);
     }
 
     /**
