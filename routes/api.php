@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -19,6 +20,10 @@ use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/uploads/preview', [UploadController::class, 'storePreview']);
+
+// Dashboard auth (Sanctum token)
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
 
 // Public storefront: product by slug (for /products/[slug] page)
 Route::get('/products/{slug}', [PublicProductController::class, 'show']);

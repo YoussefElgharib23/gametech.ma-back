@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SliderSeeder::class,
             LandingSectionSeeder::class,
             StoreSettingSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }
