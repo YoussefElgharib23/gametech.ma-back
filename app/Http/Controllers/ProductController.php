@@ -21,10 +21,10 @@ class ProductController extends Controller
         $product = Product::query()
             ->where('slug', $slug)
             ->where('status', 'active')
-            ->with(['category', 'subcategory', 'brand', 'uploads'])
+            ->with(['category', 'subcategory', 'categoryGroup', 'brand', 'uploads'])
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             throw new NotFoundHttpException('Product not found.');
         }
 

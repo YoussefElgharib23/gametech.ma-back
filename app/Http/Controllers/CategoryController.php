@@ -22,6 +22,7 @@ class CategoryController extends Controller
             'name' => $c->name,
             'slug' => $c->slug,
             'image' => $c->image,
+            'icon' => $c->icon,
             'status' => $c->status,
             'position' => $c->position,
         ]);
@@ -38,6 +39,7 @@ class CategoryController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'],
             'image' => ['nullable', 'string', 'max:500'],
+            'icon' => ['nullable', 'string', 'max:500'],
             'status' => ['nullable', 'in:active,inactive'],
             'position' => ['nullable', 'integer', 'min:0'],
         ]);
@@ -46,6 +48,7 @@ class CategoryController extends Controller
             'name' => $validated['name'],
             'slug' => $validated['slug'] ?? \Illuminate\Support\Str::slug($validated['name']),
             'image' => $validated['image'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'status' => $validated['status'] ?? 'active',
             'position' => $validated['position'] ?? 0,
         ]);
@@ -55,6 +58,7 @@ class CategoryController extends Controller
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'icon' => $category->icon,
             'status' => $category->status,
             'position' => $category->position,
         ], 201);
@@ -65,13 +69,35 @@ class CategoryController extends Controller
      */
     public function show(Category $category): JsonResponse
     {
+        $category->load([
+            'groups' => fn ($q) => $q->orderBy('position')->orderBy('name')->with([
+                'subcategories' => fn ($q2) => $q2->orderBy('position')->orderBy('name'),
+            ]),
+        ]);
+
         return response()->json([
             'id' => $category->id,
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'icon' => $category->icon,
             'status' => $category->status,
             'position' => $category->position,
+            'groups' => $category->groups->map(fn ($g) => [
+                'id' => $g->id,
+                'name' => $g->name,
+                'slug' => $g->slug,
+                'icon' => $g->icon,
+                'status' => $g->status,
+                'position' => $g->position,
+                'subcategories' => $g->subcategories->map(fn ($s) => [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'slug' => $s->slug,
+                    'status' => $s->status,
+                    'position' => $s->position,
+                ])->values(),
+            ])->values(),
         ]);
     }
 
@@ -82,8 +108,9 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
-            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:categories,slug,' . $category->id],
+            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:categories,slug,'.$category->id],
             'image' => ['sometimes', 'nullable', 'string', 'max:500'],
+            'icon' => ['sometimes', 'nullable', 'string', 'max:500'],
             'status' => ['sometimes', 'nullable', 'in:active,inactive'],
             'position' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ]);
@@ -96,6 +123,7 @@ class CategoryController extends Controller
             'name' => $category->name,
             'slug' => $category->slug,
             'image' => $category->image,
+            'icon' => $category->icon,
             'status' => $category->status,
             'position' => $category->position,
         ]);
@@ -109,7 +137,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json([
-            'status' => true
+            'status' => true,
         ]);
     }
 }

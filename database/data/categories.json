@@ -1,0 +1,996 @@
+[
+    {
+      "name": "PC & Ordinateur",
+      "href": "/734-pc",
+      "icon": "/img/cms/pc gamer.svg",
+      "groups": [
+        {
+          "name": "PC Gamer",
+          "href": "/735-pc-gamer",
+          "subcategories": [
+            {
+              "name": "PC Gamer Starter",
+              "href": "/739-pc-gamer-starter"
+            },
+            {
+              "name": "PC Gamer Pro",
+              "href": "/740-pc-gamer-pro"
+            },
+            {
+              "name": "PC Gamer Extreme",
+              "href": "/741-pc-gamer-extreme"
+            },
+            {
+              "name": "Ultra PC",
+              "href": "/756-ultra-pc"
+            }
+          ]
+        },
+        {
+          "name": "Powered By MSI",
+          "href": "/9516-powered-by-msi",
+          "subcategories": [
+            {
+              "name": "POWERED BY MSI ESSENTIAL",
+              "href": "/9517-powered-by-msi-essential"
+            },
+            {
+              "name": "POWERED BY MSI ADVANCED",
+              "href": "/9518-powered-by-msi-advanced"
+            },
+            {
+              "name": "POWERED BY MSI ULTIMATE",
+              "href": "/9519-powered-by-msi-ultimate"
+            }
+          ]
+        },
+        {
+          "name": "PC GAMER PAR JEUX",
+          "href": "/9466-pc-par-jeux",
+          "subcategories": [
+            {
+              "name": "GTA V",
+              "href": "/9438-gta-v"
+            },
+            {
+              "name": "PUBG",
+              "href": "/9439-pubg"
+            },
+            {
+              "name": "FREE FIRE",
+              "href": "/9455-free-fire"
+            },
+            {
+              "name": "FC 25",
+              "href": "/9454-fc25"
+            },
+            {
+              "name": "FC 24",
+              "href": "/9453-fc24"
+            },
+            {
+              "name": "FORTNITE",
+              "href": "/9443-fortnite"
+            },
+            {
+              "name": "CALL OF DUTY WAREZONE",
+              "href": "/9456-call-of-duty-warezone"
+            },
+            {
+              "name": "Apex Legendes",
+              "href": "/9457-apex-legendes"
+            },
+            {
+              "name": "Read Dead",
+              "href": "/9458-read-dead"
+            }
+          ]
+        },
+        {
+          "name": "PC PROFESSIONNEL PAR LOGICIEL",
+          "href": "/9467-pc-par-logiciel",
+          "subcategories": [
+            {
+              "name": "ADOBE PREMIER PRO",
+              "href": "/9444-adobe-permiere-pro"
+            },
+            {
+              "name": "ADOBE AFTER AFFECTS",
+              "href": "/9445-adobe-after-effects"
+            },
+            {
+              "name": "LUMION",
+              "href": "/9463-lumion"
+            },
+            {
+              "name": "3DS Max",
+              "href": "/9449-3ds-max"
+            },
+            {
+              "name": "AUTOCAD",
+              "href": "/9450-autocad"
+            },
+            {
+              "name": "ARCHICAD",
+              "href": "/9462-archicad"
+            },
+            {
+              "name": "ADOBE PHOTOSHOP",
+              "href": "/9459-adobe-photoshop"
+            },
+            {
+              "name": "ADOBE ILLUSTRATOR",
+              "href": "/9460-adobe-illustrator"
+            },
+            {
+              "name": "RHINO",
+              "href": "/9461-rhino"
+            }
+          ]
+        },
+        {
+          "name": "PC PAR PRIX",
+          "href": "/9465-pc-par-prix",
+          "subcategories": [
+            {
+              "name": "Moins de 3000 DH",
+              "href": "/9428-pc-moins-de-3000-dh"
+            },
+            {
+              "name": "3000 DH 4000 DH",
+              "href": "/9429-pc-entre-3000-dh-et-4000-dh"
+            },
+            {
+              "name": "4000 DH 5000 DH",
+              "href": "/9430-pc-entre-4000-dh-et-5000-dh"
+            },
+            {
+              "name": "5000 DH 7000 DH",
+              "href": "/9431-pc-entre-5000-dh-et-7000-dh"
+            },
+            {
+              "name": "7000 DH 10000 DH",
+              "href": "/9432-pc-entre-7000-dh-et-10000-dh"
+            },
+            {
+              "name": "10000 DH 15000 DH",
+              "href": "/9433-pc-entre-10000-dh-et-15000-dh"
+            },
+            {
+              "name": "15000 DH 20000 DH",
+              "href": "/9434-pc-entre-15000-dh-et-20000-dh"
+            },
+            {
+              "name": "Plus de 20000 DH",
+              "href": "/9435-pc-plus-de-20000-dh"
+            }
+          ]
+        },
+        {
+          "name": "PC PROFESSIONNEL",
+          "href": "/736-pc-professionnel",
+          "subcategories": [
+            {
+              "name": "PC PRO",
+              "href": "/737-pc-basic"
+            },
+            {
+              "name": "PC WORKSTATION",
+              "href": "/738-pc-workstation"
+            }
+          ]
+        },
+        {
+          "name": "Setup Game",
+          "href": "/766-setup-gamec",
+          "subcategories": [
+            {
+              "name": "Setup PC : PC + Ecran",
+              "href": "/9477-setup-pc-pc-ecran"
+            },
+            {
+              "name": "Setup PC Complet : PC + Souris + Clavier + Ecran",
+              "href": "/9478-setup-pc-complet-pc-souris-clavier-ecran"
+            },
+            {
+              "name": "Setup PC Complet : PC + Souris + Clavier + Ecran + Chaise + Table",
+              "href": "/9479-setup-pc-complet-pc-souris-clavier-ecran-chaise-table"
+            }
+          ]
+        },
+        {
+          "name": "PC AI POUR INTELLIGENCE ARTIFICIAL",
+          "href": "/9522-pc-ai-pour-intelligence-artificial",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "PC & ORDINATEUR PORTABLE",
+      "href": "/237-pc-portables",
+      "icon": "/img/cms/pc portable.svg",
+      "groups": [
+        {
+          "name": "PC Portables Professionnels",
+          "href": "/519-pc-portables-professionnels",
+          "subcategories": []
+        },
+        {
+          "name": "PC Portable Gamer",
+          "href": "/518-pc-portable-gamer",
+          "subcategories": []
+        },
+        {
+          "name": "PC Portable Bureautique",
+          "href": "/786-pc-portable-bureautique",
+          "subcategories": []
+        },
+        {
+          "name": "PC Portables Remis à Neuf",
+          "href": "/520-pc-portables-remis-a-neuf",
+          "subcategories": []
+        },
+        {
+          "name": "UNIVERS APPLE - MAC",
+          "href": "/521-mac",
+          "subcategories": []
+        },
+        {
+          "name": "SAC & SACOCHE & CARTABLE",
+          "href": "/709-sac-sacoche-cartable",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Composants",
+      "href": "/143-composants",
+      "icon": "/img/cms/composants.svg",
+      "groups": [
+        {
+          "name": "PROCESSEUR",
+          "href": "/165-processeur",
+          "subcategories": [
+            {
+              "name": "AMD",
+              "href": "/165-processeur?q=Marque-AMD-AMD+RYZEN"
+            },
+            {
+              "name": "Intel",
+              "href": "/165-processeur?q=Marque-INTEL"
+            }
+          ]
+        },
+        {
+          "name": "CARTE GRAPHIQUE",
+          "href": "/144-carte-graphique-video-gpu",
+          "subcategories": [
+            {
+              "name": "NVIDIA",
+              "href": "/144-carte-graphique-video-gpu?q=Marque+du+chipset-Nvidia"
+            },
+            {
+              "name": "AMD",
+              "href": "/144-carte-graphique-video-gpu?q=Marque+du+chipset-AMD"
+            }
+          ]
+        },
+        {
+          "name": "CARTE MÈRE",
+          "href": "/169-carte-mere",
+          "subcategories": [
+            {
+              "name": "AMD",
+              "href": "/169-carte-mere?q=Socket-AMD+AM4-AMD+AM5-AMD+TR4"
+            },
+            {
+              "name": "Intel",
+              "href": "/169-carte-mere?q=Socket-Intel+1151-Intel+1200-Intel+1700-Intel+1851-LGA+1700"
+            }
+          ]
+        },
+        {
+          "name": "Mémoires RAM",
+          "href": "/181-memoire-ram",
+          "subcategories": [
+            {
+              "name": "DIMM",
+              "href": "/2825-dimm"
+            },
+            {
+              "name": "SO-DIMM",
+              "href": "/2826-so-dimm"
+            }
+          ]
+        },
+        {
+          "name": "BOITIER GAMER",
+          "href": "/253-boitier-gamer",
+          "subcategories": [
+            {
+              "name": "E-ATX",
+              "href": "/253-boitier-gamer?q=Format+de+carte+mère-eatx"
+            },
+            {
+              "name": "ATX",
+              "href": "/253-boitier-gamer?q=Format+de+carte+mère-ATX"
+            },
+            {
+              "name": "MICRO-ATX",
+              "href": "/253-boitier-gamer?q=Format+de+carte+mère-microatx"
+            },
+            {
+              "name": "MINI ITX",
+              "href": "/253-boitier-gamer?q=Format+de+carte+mère-miniatx"
+            }
+          ]
+        },
+        {
+          "name": "Stockage Externe",
+          "href": "/503-stockage",
+          "subcategories": [
+            {
+              "name": "SSD EXTERNE",
+              "href": "/744-ssd-externe-stockage"
+            },
+            {
+              "name": "HDD EXTERNE",
+              "href": "/505-hdd-externe"
+            },
+            {
+              "name": "USB",
+              "href": "/504-usb"
+            },
+            {
+              "name": "CARTE SD",
+              "href": "/506-carte-sd"
+            }
+          ]
+        },
+        {
+          "name": "ALIMENTATION PC (PSU)",
+          "href": "/179-alimentation-pc-psu",
+          "subcategories": [
+            {
+              "name": "BRONZE",
+              "href": "/179-alimentation-pc-psu?q=Certification-80+PLUS+BRONZE"
+            },
+            {
+              "name": "GOLD",
+              "href": "/179-alimentation-pc-psu?q=Certification-80+PLUS+GOLD"
+            },
+            {
+              "name": "PLATINUM",
+              "href": "/179-alimentation-pc-psu?q=Certification-80+PLUS+Platinum"
+            }
+          ]
+        },
+        {
+          "name": "Stockage Interne",
+          "href": "/250-disques-durs",
+          "subcategories": [
+            {
+              "name": "HDD",
+              "href": "/252-hdd"
+            },
+            {
+              "name": "SSD",
+              "href": "/251-ssd"
+            }
+          ]
+        },
+        {
+          "name": "CPU COOLER",
+          "href": "/269-cpu-cooler",
+          "subcategories": [
+            {
+              "name": "Kits Aircooling",
+              "href": "/3023-ventirads-processeur"
+            },
+            {
+              "name": "Kits Watercooling",
+              "href": "/3024-kits-watercooling"
+            }
+          ]
+        },
+        {
+          "name": "Accessoires PC",
+          "href": "/9493-accessoires-pc",
+          "subcategories": [
+            {
+              "name": "Cable Extension",
+              "href": "/477-cable-extension"
+            },
+            {
+              "name": "Pâte Thermique",
+              "href": "/480-pate-thermique"
+            },
+            {
+              "name": "Ventilateurs Boîtier",
+              "href": "/3025-ventilateurs-boitier"
+            }
+          ]
+        },
+        {
+          "name": "Serveur NAS",
+          "href": "/9480-serveur-nas",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "PÉRIPHÉRIQUE PC",
+      "href": "/148-peripherique-pc",
+      "icon": "/img/cms/peripherique pc.svg",
+      "groups": [
+        {
+          "name": "CLAVIER",
+          "href": "/3009-clavier",
+          "subcategories": [
+            {
+              "name": "CLAVIER BUREAUTIQUE",
+              "href": "/3010-clavier-bureautique"
+            },
+            {
+              "name": "CLAVIER GAMER",
+              "href": "/154-clavier-gamer"
+            }
+          ]
+        },
+        {
+          "name": "SOURIS",
+          "href": "/3011-souris",
+          "subcategories": [
+            {
+              "name": "SOURIS BUREAUTIQUE",
+              "href": "/3012-souris-bureautique"
+            },
+            {
+              "name": "SOURIS GAMER",
+              "href": "/157-souris-gamer"
+            }
+          ]
+        },
+        {
+          "name": "CASQUE",
+          "href": "/3013-casque",
+          "subcategories": [
+            {
+              "name": "CASQUE BUREAUTIQUE",
+              "href": "/3014-casque-bureautique"
+            },
+            {
+              "name": "CASQUE GAMER",
+              "href": "/149-casque-gamer"
+            }
+          ]
+        },
+        {
+          "name": "CONNECTIQUE",
+          "href": "/2975-connectique",
+          "subcategories": [
+            {
+              "name": "Cable et Adaptateur Divers",
+              "href": "/2976-cable-et-adaptateur-divers"
+            },
+            {
+              "name": "Hub et Boitier disque",
+              "href": "/2977-hub-et-boitier-disque"
+            },
+            {
+              "name": "Cable Reseau",
+              "href": "/2978-cable-reseau"
+            },
+            {
+              "name": "Modem",
+              "href": "/9489-modem"
+            },
+            {
+              "name": "Routeur et Point d'accès",
+              "href": "/9490-routeur-et-point-d-acces"
+            }
+          ]
+        },
+        {
+          "name": "WEBCAMS",
+          "href": "/254-webcams",
+          "subcategories": []
+        },
+        {
+          "name": "Microphone",
+          "href": "/348-microphone",
+          "subcategories": []
+        },
+        {
+          "name": "ENCEINTES PC",
+          "href": "/255-enceintes-pc",
+          "subcategories": []
+        },
+        {
+          "name": "Cable Extension",
+          "href": "/477-cable-extension",
+          "subcategories": []
+        },
+        {
+          "name": "KIT GAMER",
+          "href": "/187-kit-gamer",
+          "subcategories": []
+        },
+        {
+          "name": "Onduleur",
+          "href": "/9481-onduleur",
+          "subcategories": []
+        },
+        {
+          "name": "REPOSE CASQUE",
+          "href": "/479-repose-casque",
+          "subcategories": []
+        },
+        {
+          "name": "Tablette Graphique",
+          "href": "/851-tablette-graphique",
+          "subcategories": []
+        },
+        {
+          "name": "Volant et Shifter",
+          "href": "/497-volant-et-shifter",
+          "subcategories": []
+        },
+        {
+          "name": "Tapis Souris",
+          "href": "/151-tapis-souris",
+          "subcategories": []
+        },
+        {
+          "name": "Manettes",
+          "href": "/259-manette",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Écrans & Moniteurs PC",
+      "href": "/189-ecran-pc",
+      "icon": "/img/cms/ecrans.svg",
+      "groups": [
+        {
+          "name": "Ecran Gamer",
+          "href": "/1190-ecran-gamer",
+          "subcategories": []
+        },
+        {
+          "name": "Ecran Professionel",
+          "href": "/1189-ecran-professionel",
+          "subcategories": []
+        },
+        {
+          "name": "Ecran Interactif",
+          "href": "/9476-ecran-interactif",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "CONSOLES & JEUX & VR",
+      "href": "/481-console-et-jeux",
+      "icon": "/img/cms/console.svg",
+      "groups": [
+        {
+          "name": "CONSOLE",
+          "href": "/485-console",
+          "subcategories": [
+            {
+              "name": "SONY - PLAYSTATION",
+              "href": "/9472-playstation"
+            },
+            {
+              "name": "MICROSOFT - XBOX",
+              "href": "/9483-xbox"
+            },
+            {
+              "name": "NINTENDO - SWITCH",
+              "href": "/9474-nintendo-switch"
+            },
+            {
+              "name": "LENOVO - LEGION GO",
+              "href": "/9469-rog-ally"
+            },
+            {
+              "name": "ASUS - ROG ALLY",
+              "href": "/9470-lenovo-legion-go"
+            }
+          ]
+        },
+        {
+          "name": "JEUX VIDEO",
+          "href": "/486-jeux-video",
+          "subcategories": [
+            {
+              "name": "PlayStation",
+              "href": "/9484-playstation"
+            },
+            {
+              "name": "XBOX",
+              "href": "/9485-xbox"
+            },
+            {
+              "name": "NINTENDO SWITCH",
+              "href": "/681-nintendo-switch"
+            }
+          ]
+        },
+        {
+          "name": "ACCESSOIRES",
+          "href": "/487-accessoires",
+          "subcategories": []
+        },
+        {
+          "name": "VR REALITE VIRTUELLE",
+          "href": "/9482-vr-realite-virtuelle",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "MOBILIER DE BUREAU",
+      "href": "/346-mobilier-de-bureau",
+      "icon": "/img/cms/mobilier bureau.svg",
+      "groups": [
+        {
+          "name": "CHAISES BUREAU",
+          "href": "/9486-chaises-bureau",
+          "subcategories": [
+            {
+              "name": "CHAISES ERGO",
+              "href": "/9487-chaises-ergo"
+            },
+            {
+              "name": "CHAISES GAMER",
+              "href": "/366-chaise-gamer"
+            }
+          ]
+        },
+        {
+          "name": "SIMULATEURS DE COURSE",
+          "href": "/9488-simulateurs-de-course",
+          "subcategories": []
+        },
+        {
+          "name": "TABLES BUREAU",
+          "href": "/257-bureau",
+          "subcategories": []
+        },
+        {
+          "name": "PORTE ET SUPPORT ÉCRAN",
+          "href": "/866-porte-et-support-ecran",
+          "subcategories": []
+        },
+        {
+          "name": "DECORATION LUMINEUSE NANOLEAF",
+          "href": "/490-nanoleaf",
+          "subcategories": []
+        },
+        {
+          "name": "figurine & pop",
+          "href": "/498-figurine-pop",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "UNIVERS PHOTO ET VIDEO",
+      "href": "/9494-univers-photo",
+      "icon": "/img/cms/camera.svg",
+      "groups": [
+        {
+          "name": "Appareil Photo",
+          "href": "/9495-cameras",
+          "subcategories": []
+        },
+        {
+          "name": "Objectifs",
+          "href": "/9496-objectifs",
+          "subcategories": []
+        },
+        {
+          "name": "Éclairages et Studio",
+          "href": "/9497-eclairages-et-studio",
+          "subcategories": [
+            {
+              "name": "Fond et Supports",
+              "href": "/9501-fond-et-supports"
+            },
+            {
+              "name": "Torches vidéo",
+              "href": "/9502-torches-video"
+            },
+            {
+              "name": "Trépieds",
+              "href": "/9503-trepieds"
+            },
+            {
+              "name": "Éclairages Continues",
+              "href": "/9504-eclairages-continues"
+            },
+            {
+              "name": "Softbox",
+              "href": "/9505-softbox"
+            },
+            {
+              "name": "Flash",
+              "href": "/9506-flash"
+            }
+          ]
+        },
+        {
+          "name": "SON",
+          "href": "/9498-son",
+          "subcategories": []
+        },
+        {
+          "name": "Stabilisateurs",
+          "href": "/9499-stabilisateurs",
+          "subcategories": [
+            {
+              "name": "Stabilisateurs Caméras",
+              "href": "/9507-stabilisateurs-cameras"
+            },
+            {
+              "name": "Stabilisateurs Téléphones",
+              "href": "/9508-stabilisateurs-telephones"
+            }
+          ]
+        },
+        {
+          "name": "Accessoires Photo",
+          "href": "/9500-accessoires-photo",
+          "subcategories": [
+            {
+              "name": "Moniteurs vidéo",
+              "href": "/9509-moniteurs-video"
+            },
+            {
+              "name": "Stockage SD Caméras",
+              "href": "/9510-stockage-sd-cameras"
+            },
+            {
+              "name": "Accessoires Caméras",
+              "href": "/9511-accessoires-cameras"
+            },
+            {
+              "name": "Batteries et Chargeurs Caméras",
+              "href": "/9512-batteries-et-chargeurs-cameras"
+            },
+            {
+              "name": "Bouchons et Paresoleils",
+              "href": "/9513-bouchons-et-paresoleils"
+            },
+            {
+              "name": "Sacs Caméras",
+              "href": "/9514-sacs-cameras"
+            },
+            {
+              "name": "Cages",
+              "href": "/9515-cages"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Logiciel",
+      "href": "/2812-logiciel",
+      "icon": "/img/cms/logiciel.svg",
+      "groups": [
+        {
+          "name": "Système d'exploitation",
+          "href": "/2816-systeme-dexploitation",
+          "subcategories": []
+        },
+        {
+          "name": "Antivirus et Sécurité",
+          "href": "/2817-antivirus-et-securite",
+          "subcategories": []
+        },
+        {
+          "name": "Bureautique",
+          "href": "/2818-bureautique",
+          "subcategories": []
+        },
+        {
+          "name": "CARTE DE RECHARGE JEUX",
+          "href": "/525-carte-de-recharge",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "TV, IMAGE & SON",
+      "href": "/686-tv-image-son",
+      "icon": "/img/cms/TV, Image & Son.svg",
+      "groups": [
+        {
+          "name": "TV, Image",
+          "href": "/837-tv-image",
+          "subcategories": [
+            {
+              "name": "Téléviseur",
+              "href": "/687-televiseur"
+            },
+            {
+              "name": "Supports TV",
+              "href": "/688-supports-tv"
+            },
+            {
+              "name": "Android Box",
+              "href": "/690-android-box"
+            },
+            {
+              "name": "Projecteurs",
+              "href": "/691-projecteurs"
+            },
+            {
+              "name": "Écrans de projection",
+              "href": "/692-ecrans-de-projection"
+            },
+            {
+              "name": "Récepteur Numérique",
+              "href": "/689-recepteur-numerique"
+            },
+            {
+              "name": "Home Cinéma",
+              "href": "/694-home-cinema"
+            }
+          ]
+        },
+        {
+          "name": "Son",
+          "href": "/838-son",
+          "subcategories": [
+            {
+              "name": "Écouteurs",
+              "href": "/839-ecouteurs-2"
+            },
+            {
+              "name": "CASQUES",
+              "href": "/847-casque-audio"
+            },
+            {
+              "name": "ENCEINTES, HAUX PARLEUR",
+              "href": "/695-enceinte-bluetooth"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Imprimante & Scanner & Traceur",
+      "href": "/798-imprimante-scanner-traceur",
+      "icon": "/img/cms/imprimante.svg",
+      "groups": [
+        {
+          "name": "Imprimante",
+          "href": "/799-imprimante",
+          "subcategories": [
+            {
+              "name": "Imprimante à Réservoirs Rechargeables",
+              "href": "/802-imprimante-a-reservoirs-rechargeables"
+            },
+            {
+              "name": "Multifonction Jet d'Encre",
+              "href": "/803-multifonction-jet-dencre"
+            },
+            {
+              "name": "Imprimante Laser Couleur",
+              "href": "/804-imprimante-laser-couleur"
+            },
+            {
+              "name": "Imprimante Jet d'Encre",
+              "href": "/806-imprimante-jet-dencre"
+            },
+            {
+              "name": "Imprimante Laser Monochrome",
+              "href": "/807-imprimante-laser-monochrome"
+            },
+            {
+              "name": "Multifonction Laser Monochrome",
+              "href": "/808-multifonction-laser-monochrome"
+            },
+            {
+              "name": "Traceur",
+              "href": "/809-traceur"
+            },
+            {
+              "name": "Imprimante Matricielle",
+              "href": "/810-imprimante-matricielle"
+            },
+            {
+              "name": "Étiqueteuse & Imprimante de Tickets",
+              "href": "/811-etiqueteuse-imprimante-de-tickets"
+            }
+          ]
+        },
+        {
+          "name": "Scanner",
+          "href": "/801-scanner",
+          "subcategories": [
+            {
+              "name": "Scanner à Plat sans Chargeur",
+              "href": "/818-scanner-a-plat-sans-chargeur"
+            },
+            {
+              "name": "Scanner à Défilement",
+              "href": "/819-scanner-a-defilement"
+            },
+            {
+              "name": "Scanner à Plat avec Chargeur Automatique",
+              "href": "/820-scanner-a-plat-avec-chargeur-automatique"
+            }
+          ]
+        },
+        {
+          "name": "Consommables",
+          "href": "/800-consommables",
+          "subcategories": [
+            {
+              "name": "Cartouche d'Encre",
+              "href": "/812-cartouche-dencre"
+            },
+            {
+              "name": "Toner",
+              "href": "/813-toner"
+            },
+            {
+              "name": "Ruban",
+              "href": "/815-ruban"
+            },
+            {
+              "name": "Bouteille d'Encre",
+              "href": "/816-bouteille-dencre"
+            },
+            {
+              "name": "Tête d'Impression",
+              "href": "/817-tete-dimpression"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ACCESSOIRES & GADGET",
+      "href": "/514-accessoires-electronique",
+      "icon": "/img/cms/accessoires electronique.svg",
+      "groups": [
+        {
+          "name": "Smart Watch",
+          "href": "/513-smart-watch",
+          "subcategories": []
+        },
+        {
+          "name": "Ecouteurs",
+          "href": "/510-ecouteurs",
+          "subcategories": []
+        },
+        {
+          "name": "Powerbank",
+          "href": "/511-powerbank",
+          "subcategories": []
+        },
+        {
+          "name": "Chargeur",
+          "href": "/512-chargeur",
+          "subcategories": []
+        },
+        {
+          "name": "Cable",
+          "href": "/508-cable",
+          "subcategories": []
+        },
+        {
+          "name": "camera de surveillance",
+          "href": "/9491-camera-de-surveillance",
+          "subcategories": []
+        }
+      ]
+    }
+  ]

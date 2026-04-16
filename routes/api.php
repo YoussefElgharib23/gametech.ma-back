@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryGroupController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Dashboard\CustomerController as DashboardCustomerController;
 use App\Http\Controllers\Dashboard\OverviewController as DashboardOverviewController;
@@ -63,6 +64,7 @@ Route::get('/sliders', [SliderController::class, 'index']);
 Route::put('/sliders/bulk', [SliderController::class, 'bulkUpdate']);
 
 Route::apiResource('categories', CategoryController::class);
+Route::apiResource('category-groups', CategoryGroupController::class);
 Route::apiResource('subcategories', SubcategoryController::class);
 Route::apiResource('brands', BrandController::class);
 

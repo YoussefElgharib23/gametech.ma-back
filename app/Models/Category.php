@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -18,6 +20,7 @@ class Category extends Model
         'name',
         'slug',
         'image',
+        'icon',
         'status',
         'position',
     ];
@@ -35,8 +38,6 @@ class Category extends Model
      */
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image;
-        
         if (empty($this->image)) {
             return null;
         }
@@ -54,9 +55,24 @@ class Category extends Model
         return $query->where('status', 'inactive');
     }
 
-    public function subcategories()
+    public function groups(): HasMany
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->hasMany(CategoryGroup::class);
+    }
+
+    /**
+     * All subcategories under this category (via groups).
+     */
+    public function subcategories(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Subcategory::class,
+            CategoryGroup::class,
+            'category_id',
+            'category_group_id',
+            'id',
+            'id',
+        );
     }
 
     public function products()

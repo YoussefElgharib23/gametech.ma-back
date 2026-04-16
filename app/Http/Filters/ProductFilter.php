@@ -57,6 +57,26 @@ class ProductFilter extends Filter
     }
 
     /**
+     * Products that still need catalog placement: no category, or category set but no group and no subcategory.
+     */
+    public function needs_catalog(mixed $value): Builder
+    {
+        $enabled = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($enabled !== true) {
+            return $this->builder;
+        }
+
+        return $this->builder->where(function (Builder $q): void {
+            $q->whereNull('category_id')
+                ->orWhere(function (Builder $q2): void {
+                    $q2->whereNotNull('category_id')
+                        ->whereNull('category_group_id')
+                        ->whereNull('subcategory_id');
+                });
+        });
+    }
+
+    /**
      * Filter by brand_id.
      */
     public function brand_id(mixed $value): Builder
@@ -80,6 +100,19 @@ class ProductFilter extends Filter
         }
 
         return $this->builder->where('subcategory_id', $id);
+    }
+
+    /**
+     * Filter by category_group_id.
+     */
+    public function category_group_id(mixed $value): Builder
+    {
+        $id = is_numeric($value) ? (int) $value : null;
+        if ($id === null) {
+            return $this->builder;
+        }
+
+        return $this->builder->where('category_group_id', $id);
     }
 
     /**

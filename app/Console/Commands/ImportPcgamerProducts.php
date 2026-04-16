@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\CategoryGroup;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Services\UploadService;
@@ -82,7 +83,7 @@ class ImportPcgamerProducts extends Command
             }
 
             $payload = $response->json();
-            if (!is_array($payload) || !isset($payload['data']) || !is_array($payload['data'])) {
+            if (! is_array($payload) || ! isset($payload['data']) || ! is_array($payload['data'])) {
                 $this->error("Unexpected response structure for page {$page}");
 
                 return self::FAILURE;
@@ -95,7 +96,7 @@ class ImportPcgamerProducts extends Command
 
             foreach ($products as $remote) {
                 // Skip soft-deleted products
-                if (!empty($remote['deleted_at'])) {
+                if (! empty($remote['deleted_at'])) {
                     continue;
                 }
 
@@ -131,7 +132,7 @@ class ImportPcgamerProducts extends Command
         $name = $remote['name']['fr'] ?? ($remote['name'] ?? null);
 
         if (empty($slug) || empty($name)) {
-            $this->warn('Skipping product with missing slug or name: ' . json_encode($remote));
+            $this->warn('Skipping product with missing slug or name: '.json_encode($remote));
 
             return null;
         }
@@ -152,10 +153,11 @@ class ImportPcgamerProducts extends Command
         $isActive = (bool) ($remote['is_active'] ?? false);
 
         $subCategory = $remote['sub_category'] ?? null;
-        $categoryGroup = $subCategory['category_group'] ?? null;
-        $categoryData = $categoryGroup['category'] ?? null;
+        $categoryGroupPayload = is_array($subCategory) ? ($subCategory['category_group'] ?? null) : null;
+        $categoryData = is_array($categoryGroupPayload) ? ($categoryGroupPayload['category'] ?? null) : null;
 
         $categoryId = null;
+        $categoryGroupId = null;
         $subcategoryId = null;
 
         if (is_array($categoryData)) {
@@ -175,15 +177,52 @@ class ImportPcgamerProducts extends Command
             }
         }
 
-        if (is_array($subCategory)) {
+        if (is_array($categoryGroupPayload) && $categoryId !== null) {
+            $groupSlug = $categoryGroupPayload['slug'] ?? null;
+            $groupName = $categoryGroupPayload['name']['fr'] ?? ($categoryGroupPayload['name'] ?? null);
+
+            if ($groupSlug && $groupName) {
+                $group = CategoryGroup::firstOrCreate(
+                    [
+                        'category_id' => $categoryId,
+                        'slug' => $groupSlug,
+                    ],
+                    [
+                        'name' => $groupName,
+                        'status' => 'active',
+                        'position' => 0,
+                    ],
+                );
+                $categoryGroupId = $group->id;
+            }
+        }
+
+        if ($categoryId !== null && $categoryGroupId === null) {
+            $fallback = CategoryGroup::firstOrCreate(
+                [
+                    'category_id' => $categoryId,
+                    'slug' => 'general',
+                ],
+                [
+                    'name' => 'Général',
+                    'status' => 'active',
+                    'position' => 0,
+                ],
+            );
+            $categoryGroupId = $fallback->id;
+        }
+
+        if (is_array($subCategory) && $categoryGroupId !== null) {
             $subcategorySlug = $subCategory['slug'] ?? null;
             $subcategoryName = $subCategory['name']['fr'] ?? ($subCategory['name'] ?? null);
 
             if ($subcategorySlug && $subcategoryName) {
                 $subcategory = Subcategory::firstOrCreate(
-                    ['slug' => $subcategorySlug],
                     [
-                        'category_id' => $categoryId,
+                        'category_group_id' => $categoryGroupId,
+                        'slug' => $subcategorySlug,
+                    ],
+                    [
                         'name' => $subcategoryName,
                         'status' => 'active',
                         'position' => 0,
@@ -194,7 +233,7 @@ class ImportPcgamerProducts extends Command
         }
 
         $brandId = null;
-        if (!empty($remote['brand']) && is_array($remote['brand'])) {
+        if (! empty($remote['brand']) && is_array($remote['brand'])) {
             $brandSlug = $remote['brand']['slug'] ?? null;
             $brandName = $remote['brand']['name']['fr'] ?? ($remote['brand']['name'] ?? null);
             $brandImage = $remote['brand']['path'] ?? null;
@@ -222,6 +261,7 @@ class ImportPcgamerProducts extends Command
                     'short_description' => null,
                     'description' => $description,
                     'category_id' => $categoryId,
+                    'category_group_id' => $categoryGroupId,
                     'subcategory_id' => $subcategoryId,
                     'brand_id' => $brandId,
                     'price' => $price,
@@ -234,9 +274,9 @@ class ImportPcgamerProducts extends Command
                     'published_at' => $remote['created_at'] ?? null,
                 ],
             );
-        }
-        catch (\Throwable $e) {
-            $this->error('Error importing product ' . $slug . ': ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            $this->error('Error importing product '.$slug.': '.$e->getMessage());
+
             return null;
         }
 
@@ -250,7 +290,7 @@ class ImportPcgamerProducts extends Command
                     $upload->position = $index;
                     $upload->save();
                 } catch (\Throwable $e) {
-                    $this->warn('Failed to download image "' . $url . '" for product ' . $slug . ': ' . $e->getMessage());
+                    $this->warn('Failed to download image "'.$url.'" for product '.$slug.': '.$e->getMessage());
                 }
             }
         }
@@ -269,4 +309,3 @@ class ImportPcgamerProducts extends Command
         return collect($remote['images'])->pluck('url')->unique()->values()->toArray();
     }
 }
-

@@ -43,7 +43,7 @@ class ProductController extends Controller
     ];
 
     /**
-     * List products (paginated). Filters via query string (search, status, category_id, brand_id).
+     * List products (paginated). Filters via query string (search, status, category_id, brand_id, needs_catalog, …).
      * Query: page, per_page (default 15).
      *
      * @see https://pineco.de/filtering-eloquent-queries-based-on-http-requests/
@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
         $perPage = max(1, min(100, (int) $request->input('per_page', 15)));
 
-        $paginator = Product::with(['category', 'subcategory', 'brand', 'uploads', 'sections'])
+        $paginator = Product::with(['category', 'subcategory', 'categoryGroup', 'brand', 'uploads', 'sections'])
             ->filter($filter)
             ->latest('id')
             ->paginate($perPage)
@@ -65,6 +65,8 @@ class ProductController extends Controller
                 'short_description' => $p->short_description,
                 'category_id' => $p->category_id,
                 'category_name' => $p->category?->name,
+                'category_group_id' => $p->category_group_id,
+                'category_group_name' => $p->categoryGroup?->name,
                 'subcategory_id' => $p->subcategory_id,
                 'subcategory_name' => $p->subcategory?->name,
                 'brand_id' => $p->brand_id,
@@ -102,7 +104,16 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'short_description' => ['nullable', 'string'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'subcategory_id' => ['nullable', 'integer', 'exists:subcategories,id'],
+            'category_group_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('category_groups', 'id')->where(fn ($q) => $q->where('category_id', (int) $request->input('category_id'))),
+            ],
+            'subcategory_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('subcategories', 'id')->where(fn ($q) => $q->where('category_id', (int) $request->input('category_id'))),
+            ],
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'compare_at_price' => ['nullable', 'numeric', 'min:0'],
@@ -120,6 +131,8 @@ class ProductController extends Controller
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
         ]);
 
+        $validated = $this->normalizeCategoryPlacementForSave($validated);
+
         $product = Product::create([
             'title' => $validated['title'],
             'sku' => $validated['sku'],
@@ -127,6 +140,7 @@ class ProductController extends Controller
             'description' => $validated['description'] ?? null,
             'short_description' => $validated['short_description'] ?? null,
             'category_id' => $validated['category_id'],
+            'category_group_id' => $validated['category_group_id'] ?? null,
             'subcategory_id' => $validated['subcategory_id'] ?? null,
             'brand_id' => $validated['brand_id'],
             'price' => $validated['price'],
@@ -162,7 +176,7 @@ class ProductController extends Controller
             }
         }
 
-        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
+        $product->load(['category', 'subcategory', 'categoryGroup', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -173,6 +187,8 @@ class ProductController extends Controller
             'short_description' => $product->short_description,
             'category_id' => $product->category_id,
             'category_name' => $product->category?->name,
+            'category_group_id' => $product->category_group_id,
+            'category_group_name' => $product->categoryGroup?->name,
             'subcategory_id' => $product->subcategory_id,
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
@@ -201,7 +217,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
-        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
+        $product->load(['category', 'subcategory', 'categoryGroup', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -212,6 +228,8 @@ class ProductController extends Controller
             'short_description' => $product->short_description,
             'category_id' => $product->category_id,
             'category_name' => $product->category?->name,
+            'category_group_id' => $product->category_group_id,
+            'category_group_name' => $product->categoryGroup?->name,
             'subcategory_id' => $product->subcategory_id,
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
@@ -247,7 +265,18 @@ class ProductController extends Controller
             'description' => ['sometimes', 'nullable', 'string'],
             'short_description' => ['sometimes', 'nullable', 'string'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'subcategory_id' => ['sometimes', 'nullable', 'integer', 'exists:subcategories,id'],
+            'category_group_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('category_groups', 'id')->where(fn ($q) => $q->where('category_id', (int) $request->input('category_id'))),
+            ],
+            'subcategory_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('subcategories', 'id')->where(fn ($q) => $q->where('category_id', (int) $request->input('category_id'))),
+            ],
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'price' => ['sometimes', 'numeric', 'min:0'],
             'compare_at_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
@@ -264,6 +293,8 @@ class ProductController extends Controller
             'upload_ids' => ['sometimes', 'nullable', 'array'],
             'upload_ids.*' => ['integer', 'exists:uploads,id'],
         ]);
+
+        $validated = $this->normalizeCategoryPlacementForSave($validated);
 
         $product->fill($validated);
         $product->save();
@@ -300,7 +331,7 @@ class ProductController extends Controller
             }
         }
 
-        $product->load(['category', 'subcategory', 'brand', 'uploads', 'sections']);
+        $product->load(['category', 'subcategory', 'categoryGroup', 'brand', 'uploads', 'sections']);
 
         return response()->json([
             'id' => $product->id,
@@ -311,6 +342,8 @@ class ProductController extends Controller
             'short_description' => $product->short_description,
             'category_id' => $product->category_id,
             'category_name' => $product->category?->name,
+            'category_group_id' => $product->category_group_id,
+            'category_group_name' => $product->categoryGroup?->name,
             'subcategory_id' => $product->subcategory_id,
             'subcategory_name' => $product->subcategory?->name,
             'brand_id' => $product->brand_id,
@@ -385,5 +418,30 @@ class ProductController extends Controller
             ->update(['is_featured' => $validated['is_featured']]);
 
         return response()->json(['status' => true, 'updated' => count($validated['product_ids'])]);
+    }
+
+    /**
+     * Prefer subcategory over group when both are sent; otherwise attach to a group only or clear both.
+     *
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function normalizeCategoryPlacementForSave(array $validated): array
+    {
+        $subId = $validated['subcategory_id'] ?? null;
+        $groupId = $validated['category_group_id'] ?? null;
+
+        if ($subId !== null && $subId !== '') {
+            $validated['subcategory_id'] = (int) $subId;
+            unset($validated['category_group_id']);
+        } elseif ($groupId !== null && $groupId !== '') {
+            $validated['category_group_id'] = (int) $groupId;
+            $validated['subcategory_id'] = null;
+        } else {
+            $validated['subcategory_id'] = null;
+            $validated['category_group_id'] = null;
+        }
+
+        return $validated;
     }
 }

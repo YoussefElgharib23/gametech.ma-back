@@ -26,6 +26,7 @@ class Product extends Model
         'short_description',
         'category_id',
         'subcategory_id',
+        'category_group_id',
         'brand_id',
         'price',
         'compare_at_price',
@@ -45,6 +46,7 @@ class Product extends Model
     protected $casts = [
         'category_id' => 'integer',
         'subcategory_id' => 'integer',
+        'category_group_id' => 'integer',
         'brand_id' => 'integer',
         'price' => 'decimal:2',
         'compare_at_price' => 'decimal:2',
@@ -64,6 +66,11 @@ class Product extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(Subcategory::class);
+    }
+
+    public function categoryGroup(): BelongsTo
+    {
+        return $this->belongsTo(CategoryGroup::class);
     }
 
     public function brand(): BelongsTo
@@ -120,6 +127,11 @@ class Product extends Model
     public function scopeBySubcategory($query, $subcategoryId)
     {
         return $query->where('subcategory_id', $subcategoryId);
+    }
+
+    public function scopeByCategoryGroup($query, int $categoryGroupId)
+    {
+        return $query->where('category_group_id', $categoryGroupId);
     }
 
     public function scopeByBrand($query, $brandId)
@@ -202,6 +214,21 @@ class Product extends Model
             }
             if (empty($product->status)) {
                 $product->status = 'draft';
+            }
+        });
+
+        static::saving(function (Product $product): void {
+            if ($product->subcategory_id) {
+                $sub = Subcategory::query()->find($product->subcategory_id);
+                if ($sub !== null) {
+                    $product->category_group_id = $sub->category_group_id;
+                    $product->category_id = $sub->category_id;
+                }
+            } elseif ($product->category_group_id) {
+                $group = CategoryGroup::query()->find($product->category_group_id);
+                if ($group !== null) {
+                    $product->category_id = $group->category_id;
+                }
             }
         });
 

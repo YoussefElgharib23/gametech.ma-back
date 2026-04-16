@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ProductLandingSection;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\CategoryGroup;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Slider;
@@ -77,6 +78,7 @@ class HomeController extends Controller
                 'name' => $c->name,
                 'slug' => $c->slug,
                 'image' => $c->image_url,
+                'icon' => $c->icon,
             ]);
 
         $landingProducts = collect(ProductLandingSection::cases())
@@ -194,7 +196,7 @@ class HomeController extends Controller
     /**
      * Archive page: list products for a given entity type & slug.
      *
-     * @param  string  $entityType  category|subcategory|brand (or plural forms)
+     * @param  string  $entityType  category|subcategory|category_group|brand (or plural forms)
      */
     public function archive(Request $request, string $entityType, string $entitySlug): JsonResponse
     {
@@ -218,6 +220,11 @@ class HomeController extends Controller
             $query->where('subcategory_id', $subcategory->id);
             $entityLabel = $subcategory->name;
             $normalizedType = 'subcategory';
+        } elseif (in_array($type, ['category_group', 'category-group', 'category_groups', 'category-groups', 'group', 'groups'], true)) {
+            $group = CategoryGroup::active()->where('slug', $slug)->firstOrFail();
+            $query->where('category_group_id', $group->id);
+            $entityLabel = $group->name;
+            $normalizedType = 'category_group';
         } elseif (in_array($type, ['brand', 'brands'], true)) {
             $brand = Brand::active()->where('slug', $slug)->firstOrFail();
             $query->where('brand_id', $brand->id);
@@ -384,27 +391,50 @@ class HomeController extends Controller
     }
 
     /**
-     * Categories with their subcategories for nav/mega menu.
-     * Sorted by total product count across their subcategories (most products first).
+     * Categories with groups and subcategories for nav/mega menu.
+     * Sorted by total product count under each category (most products first).
      */
     public function categoriesWithChildren(): JsonResponse
     {
         $categories = Category::active()
-            ->with(['subcategories' => fn ($q) => $q->active()->orderBy('position')->orderBy('name')->withCount('products')])
+            ->with([
+                'groups' => fn ($q) => $q->active()
+                    ->orderByRaw('position IS NULL')
+                    ->orderBy('position')
+                    ->orderBy('name')
+                    ->with([
+                        'subcategories' => fn ($q2) => $q2->active()
+                            ->orderByRaw('position IS NULL')
+                            ->orderBy('position')
+                            ->orderBy('name')
+                            ->withCount('products'),
+                    ])
+                    ->withCount('products'),
+            ])
             ->orderBy('position')
             ->orderBy('name')
             ->get()
-            ->sortByDesc(fn (Category $c) => $c->subcategories->sum('products_count'))
+            ->sortByDesc(fn (Category $c) => $c->groups->sum('products_count'))
             ->values();
 
         $items = $categories->map(fn (Category $c) => [
             'id' => $c->id,
             'name' => $c->name,
             'slug' => $c->slug,
-            'subcategories' => $c->subcategories->map(fn (Subcategory $s) => [
-                'id' => $s->id,
-                'name' => $s->name,
-                'slug' => $s->slug,
+            'image' => $c->image,
+            'icon' => $c->icon,
+            'groups' => $c->groups->map(fn (CategoryGroup $g) => [
+                'id' => $g->id,
+                'name' => $g->name,
+                'slug' => $g->slug,
+                'icon' => $g->icon,
+                'products_count' => (int) $g->products_count,
+                'subcategories' => $g->subcategories->map(fn (Subcategory $s) => [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'slug' => $s->slug,
+                    'products_count' => (int) $s->products_count,
+                ])->values(),
             ])->values(),
         ])->values();
 
