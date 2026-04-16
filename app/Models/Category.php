@@ -35,6 +35,8 @@ class Category extends Model
      */
     public function getImageUrlAttribute(): ?string
     {
+        return $this->image;
+        
         if (empty($this->image)) {
             return null;
         }
