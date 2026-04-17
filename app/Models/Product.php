@@ -37,6 +37,7 @@ class Product extends Model
         'position',
         'section',
         'configurator_category',
+        'configurator_category_classified_at',
         'published_at',
     ];
 
@@ -54,6 +55,7 @@ class Product extends Model
         'is_featured' => 'boolean',
         'position' => 'integer',
         'section' => ProductLandingSection::class,
+        'configurator_category_classified_at' => 'datetime',
         'published_at' => 'datetime',
     ];
 
