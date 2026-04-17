@@ -56,7 +56,7 @@ class HomeController extends Controller
         $brands = Brand::active()
             ->whereNotNull('image')
             ->withCount('products')
-            ->orderByDesc('products_count')
+            ->orderBy('products_count')
             ->orderBy('name')
             ->orderBy('id')
             ->get()
@@ -68,10 +68,7 @@ class HomeController extends Controller
             ]);
 
         $categories = Category::active()
-            ->orderByRaw('position IS NULL')
             ->orderBy('position')
-            ->orderBy('name')
-            ->orderBy('id')
             ->get()
             ->map(fn (Category $c) => [
                 'id' => $c->id,
