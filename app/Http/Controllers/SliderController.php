@@ -11,7 +11,10 @@ class SliderController extends Controller
 {
     public function index(): JsonResponse
     {
-        $sliders = Slider::with('image')->orderBy('id')->get();
+        $sliders = Slider::with('image')
+            ->orderBy('side')
+            ->orderBy('id')
+            ->get();
 
         $data = $sliders->map(function (Slider $slider) {
             return [
@@ -36,14 +39,17 @@ class SliderController extends Controller
     {
         $validated = $request->validate([
             'items' => ['required', 'array'],
-            'items.*.slider_id' => ['required', 'integer', 'exists:sliders,id'],
+            'items.*.slider_id' => ['nullable', 'integer', 'exists:sliders,id'],
+            'items.*.side' => ['required_without:items.*.slider_id', 'string'],
             'items.*.link' => ['nullable', 'string'],
             'items.*.upload_id' => ['nullable', 'integer', 'exists:uploads,id'],
+            'deleted_slider_ids' => ['sometimes', 'array'],
+            'deleted_slider_ids.*' => ['integer', 'exists:sliders,id'],
         ]);
 
         $items = collect($validated['items']);
 
-        $sliderIds = $items->pluck('slider_id')->unique()->all();
+        $sliderIds = $items->pluck('slider_id')->filter()->unique()->all();
         $uploadIds = $items->pluck('upload_id')->filter()->unique()->all();
 
         /** @var \Illuminate\Database\Eloquent\Collection<int, Slider> $sliders */
@@ -52,12 +58,44 @@ class SliderController extends Controller
         /** @var \Illuminate\Database\Eloquent\Collection<int, Upload> $uploads */
         $uploads = Upload::whereIn('id', $uploadIds)->get()->keyBy('id');
 
-        foreach ($items as $item) {
-            /** @var Slider $slider */
-            $slider = $sliders[$item['slider_id']];
+        $deletedIds = collect($validated['deleted_slider_ids'] ?? [])
+            ->unique()
+            ->values();
 
-            $slider->link = $item['link'] ?? null;
-            $slider->save();
+        if ($deletedIds->isNotEmpty()) {
+            // Detach uploads first so they don't remain linked to deleted rows.
+            $toDelete = Slider::with('image')->whereIn('id', $deletedIds)->get();
+            foreach ($toDelete as $slider) {
+                if ($slider->image) {
+                    $slider->image->uploadable()->dissociate();
+                    $slider->image->save();
+                }
+                $slider->delete();
+            }
+        }
+
+        foreach ($items as $item) {
+            $sliderId = $item['slider_id'] ?? null;
+
+            /** @var Slider $slider */
+            $slider = $sliderId ? ($sliders[$sliderId] ?? null) : null;
+
+            if (! $slider) {
+                $side = $item['side'] ?? null;
+                if (! $side) {
+                    continue;
+                }
+
+                $slider = Slider::create([
+                    'side' => $side,
+                    'link' => $item['link'] ?? null,
+                ]);
+
+                $sliders->put($slider->id, $slider);
+            } else {
+                $slider->link = $item['link'] ?? null;
+                $slider->save();
+            }
 
             $uploadId = $item['upload_id'] ?? null;
 
