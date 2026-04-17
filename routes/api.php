@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\CustomerController as DashboardCustomerContro
 use App\Http\Controllers\Dashboard\OverviewController as DashboardOverviewController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\StoreSettingController as DashboardStoreSettingController;
+use App\Http\Controllers\DevisController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingSectionController;
 use App\Http\Controllers\ProductController as PublicProductController;
@@ -62,6 +63,8 @@ Route::get('/categories/with-children', [HomeController::class, 'categoriesWithC
 
 Route::get('/sliders', [SliderController::class, 'index']);
 Route::put('/sliders/bulk', [SliderController::class, 'bulkUpdate']);
+
+Route::post('/devis/pc-config', [DevisController::class, 'pcConfig']);
 
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('category-groups', CategoryGroupController::class);

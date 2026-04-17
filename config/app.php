@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://api.gametech.ma'),
+    'frontend_url' => env('APP_FRONTEND_URL', 'https://www.gametech.ma'),
 
     /*
     |--------------------------------------------------------------------------
