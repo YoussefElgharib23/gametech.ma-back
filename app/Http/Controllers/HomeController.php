@@ -102,7 +102,7 @@ class HomeController extends Controller
     /**
      * Active products shown in the homepage “Nos sélections / Nouvel arrivage / Best seller” blocks.
      *
-     * @return list<array{id: int, slug: string, title: string, image: string|null, stockStatus: string, currentPrice: string, oldPrice: string|null}>
+     * @return list<array{id: int, slug: string, title: string, image: string|null, images: list<string>, stockStatus: string, currentPrice: string, oldPrice: string|null}>
      */
     private function landingProductsForSection(ProductLandingSection $section): array
     {
@@ -122,11 +122,12 @@ class HomeController extends Controller
     }
 
     /**
-     * @return array{id: int, slug: string, title: string, image: string|null, stockStatus: string, currentPrice: string, oldPrice: string|null}
+     * @return array{id: int, slug: string, title: string, image: string|null, images: list<string>, stockStatus: string, currentPrice: string, oldPrice: string|null}
      */
     private function mapProductForLandingCarousel(Product $product): array
     {
         $firstImage = $product->uploads->first();
+        $images = $product->uploads->map(fn ($u) => $u->url)->values()->all();
         $isPromo = $product->compare_at_price !== null
             && (float) $product->compare_at_price > (float) $product->price;
 
@@ -135,6 +136,7 @@ class HomeController extends Controller
             'slug' => $product->slug,
             'title' => $product->title,
             'image' => $firstImage?->url,
+            'images' => $images,
             'stockStatus' => $product->stock_status_label,
             'currentPrice' => $product->price_label,
             'oldPrice' => $isPromo ? $product->compare_at_price_label : null,
@@ -333,12 +335,14 @@ class HomeController extends Controller
 
         $items = $products->map(function (Product $product) {
             $firstImage = $product->uploads->first();
+            $images = $product->uploads->map(fn ($u) => $u->url)->values()->all();
 
             return [
                 'id' => $product->id,
                 'slug' => $product->slug,
                 'title' => $product->title,
                 'image' => $firstImage?->url,
+                'images' => $images,
                 'brand' => $product->brand?->name ?? '',
                 'brand_image' => $product->brand?->image_url,
                 'stockStatus' => $product->stock_status_label,
@@ -350,12 +354,14 @@ class HomeController extends Controller
 
         $sidebarItems = $sidebarProducts->map(function (Product $product) {
             $firstImage = $product->uploads->first();
+            $images = $product->uploads->map(fn ($u) => $u->url)->values()->all();
 
             return [
                 'id' => $product->id,
                 'slug' => $product->slug,
                 'title' => $product->title,
                 'image' => $firstImage?->url,
+                'images' => $images,
                 'brand' => $product->brand?->name ?? '',
                 'brand_image' => $product->brand?->image_url,
                 'stockStatus' => $product->stock_status_label,
@@ -476,6 +482,7 @@ class HomeController extends Controller
             ->get()
             ->map(function (Product $product) {
                 $firstImage = $product->uploads->first();
+                $images = $product->uploads->map(fn ($u) => $u->url)->values()->all();
                 $isPromo = $product->compare_at_price !== null
                     && (float) $product->compare_at_price > (float) $product->price;
 
@@ -484,6 +491,7 @@ class HomeController extends Controller
                     'slug' => $product->slug,
                     'title' => $product->title,
                     'image' => $firstImage?->url,
+                    'images' => $images,
                     'brand_name' => $product->brand?->name,
                     'brand_image' => $product->brand?->image_url,
                     'stockStatus' => $product->stock_status_label,
@@ -542,6 +550,7 @@ class HomeController extends Controller
         $items = $products
             ->map(function (Product $product) {
                 $firstImage = $product->uploads->first();
+                $images = $product->uploads->map(fn ($u) => $u->url)->values()->all();
                 $isPromo = $product->compare_at_price !== null
                     && (float) $product->compare_at_price > (float) $product->price;
 
@@ -550,6 +559,7 @@ class HomeController extends Controller
                     'slug' => $product->slug,
                     'title' => $product->title,
                     'image' => $firstImage?->url,
+                    'images' => $images,
                     'priceLabel' => $product->price_label,
                     'oldPriceLabel' => $product->compare_at_price_label,
                     'isPromo' => $isPromo,
