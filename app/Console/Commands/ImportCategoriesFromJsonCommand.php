@@ -75,7 +75,7 @@ class ImportCategoriesFromJsonCommand extends Command
                 $category = Category::query()->create([
                     'name' => $cName,
                     'image' => null,
-                    'icon' => $this->nullableStringPath($categoryPayload['icon'] ?? null),
+                    'icon' => $this->normalizeIconURL($cName),
                     'status' => 'active',
                     'position' => (int) $position,
                 ]);
@@ -102,7 +102,7 @@ class ImportCategoriesFromJsonCommand extends Command
                     $group = CategoryGroup::query()->create([
                         'category_id' => $category->id,
                         'name' => $gName,
-                        'icon' => $this->nullableStringPath($groupPayload['icon'] ?? null),
+                        'icon' => $this->normalizeIconURL($groupPayload['icon'] ?? null),
                         'status' => 'active',
                         'position' => (int) $gPos,
                     ]);
@@ -190,14 +190,14 @@ class ImportCategoriesFromJsonCommand extends Command
         return database_path('data/categories.json');
     }
 
-    private function nullableStringPath(mixed $value): ?string
+    private function normalizeIconURL(mixed $value): ?string
     {
-        if (! is_string($value)) {
+        if (is_null($value)) {
             return null;
         }
 
-        $trimmed = trim($value);
+        $value = strtoupper($value);
 
-        return $trimmed === '' ? null : $trimmed;
+        return config('app.url') . "/storage/categories/icons/" . $value . ".png";
     }
 }
