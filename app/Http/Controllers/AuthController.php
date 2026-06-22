@@ -52,4 +52,27 @@ class AuthController extends Controller
             'ok' => true,
         ]);
     }
+
+    /**
+     * Get the currently authenticated user.
+     */
+    public function me(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user instanceof User) {
+            return response()->json([
+                'message' => 'Non authentifié.',
+            ], 401);
+        }
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at,
+            ],
+        ]);
+    }
 }

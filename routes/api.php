@@ -27,6 +27,7 @@ Route::post('/uploads/preview', [UploadController::class, 'storePreview']);
 // Dashboard auth (Sanctum token)
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/auth/me', [AuthController::class, 'me']);
 
 // Public storefront: product by slug (for /products/[slug] page)
 Route::get('/products/{slug}', [PublicProductController::class, 'show']);
@@ -78,7 +79,7 @@ Route::get('/landing-sections', [LandingSectionController::class, 'index']);
 Route::get('/landing-sections/{key}', [LandingSectionController::class, 'show']);
 Route::put('/landing-sections/{key}', [LandingSectionController::class, 'update']);
 
-Route::group(['prefix' => 'dashboard'], function () {
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:sanctum']], function () {
     Route::get('overview', DashboardOverviewController::class);
     Route::apiResource('products', ProductController::class);
     Route::get('customers', [DashboardCustomerController::class, 'index']);
@@ -90,7 +91,7 @@ Route::group(['prefix' => 'dashboard'], function () {
 });
 
 // Admin routes for order management
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum']], function () {
     Route::get('/orders', [AdminOrderController::class, 'index']);
     Route::get('/orders/statistics', [AdminOrderController::class, 'statistics']);
     Route::get('/orders/{id}/confirm-preview', [AdminOrderController::class, 'confirmPreview']);
