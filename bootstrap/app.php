@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+            'auth.visitor' => \App\Http\Middleware\AuthenticateVisitor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

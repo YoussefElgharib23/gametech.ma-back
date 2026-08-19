@@ -43,9 +43,9 @@ Route::get('/store-settings/public', [StoreSettingController::class, 'public']);
 
 // Configurator: products by configurator_category
 Route::get('/configurator/products', [HomeController::class, 'configuratorProducts']);
-Route::post('/visit', [VisitorController::class, 'visit']);
+Route::middleware('auth.visitor:optional')->post('/visit', [VisitorController::class, 'visit']);
 
-Route::middleware('auth:visitor')->group(function () {
+Route::middleware('auth.visitor')->group(function () {
     Route::get('/cart', [CartController::class, 'show']);
     Route::post('/cart/items', [CartController::class, 'addItem']);
     Route::patch('/cart/items/{itemId}/increment', [CartController::class, 'incrementItem']);
